@@ -861,13 +861,14 @@ main > section, .footer {
 }
 
 @media (min-width: 640px) {
-  #map-section { padding-bottom: 56.25%; }
+  #map-section { padding-bottom: 42%; }
 }
 
 /* pointer-events:none lets the wheel pass through to Lenis — an interactive
    iframe swallows scroll and strands the page near the bottom. Fine while the
    map is a placeholder; swap for a click-to-activate overlay with a real map. */
 #map-section iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; pointer-events: none; }
+.carte__link { display: inline-block; margin-top: 1rem; font-size: var(--font-size-sm); text-decoration: underline; text-underline-offset: .3em; }
 
 /* ============================================= */
 /* Footer */
@@ -1490,15 +1491,18 @@ body.is-past-hero .lang-switch { color: var(--color-text); background: rgba(var(
   <!-- ============================================= -->
   <!-- 8. CARTE -->
   <!-- ============================================= -->
-  <section id="carte" class="carte" data-bg="bg">
+  <section id="carte" class="carte">
+    <h3 data-i18n="h3.map">Accès</h3>
+    <!-- [[À compléter : remplacer "Lagardère, 32310" par l'adresse exacte du gîte dans les deux liens]] -->
     <div id="map-section" data-reveal>
       <iframe
-        title="[[À compléter : Carte — accès à Samaret]]"
-        src="[[À compléter : lien d’intégration Google Maps]]"
+        title="Carte — accès à Samaret, Lagardère (Gers)"
+        src="https://www.google.com/maps?q=Lagard%C3%A8re%2C%2032310%20Gers&z=13&output=embed"
         loading="lazy"
         referrerpolicy="no-referrer-when-downgrade">
       </iframe>
     </div>
+    <a class="carte__link" href="https://www.google.com/maps/search/?api=1&query=Lagard%C3%A8re%2C%2032310%20Gers" target="_blank" rel="noopener" data-i18n="map.open">Ouvrir dans Google Maps ↗</a>
   </section>
 
   <!-- ============================================= -->
@@ -1521,17 +1525,17 @@ body.is-past-hero .lang-switch { color: var(--color-text); background: rgba(var(
 <!-- ============================================= -->
 <footer id="contact" class="footer theme-dark">
   <div class="footer__container">
-    <div class="footer__contact" data-reveal>
+    <div class="footer__contact">
       <a href="tel:[[À compléter : numéro de téléphone]]">[[À compléter : téléphone]]</a>
       <a href="mailto:[[À compléter : adresse e-mail]]">[[À compléter : adresse e-mail]]</a>
       <a href="[[À compléter : lien WhatsApp]]">WhatsApp</a>
     </div>
-    <div class="footer__legal" data-reveal>
+    <div class="footer__legal">
       <a href="[[À compléter : lien mentions légales]]" data-i18n="f.legal">Mentions légales</a>
       <a href="[[À compléter : lien politique de confidentialité]]" data-i18n="f.privacy">Politique de confidentialité</a>
       <!-- [[À compléter : lien Instagram, facultatif]] -->
     </div>
-    <p class="footer__copyright" data-reveal>© 2026 Samaret — Gîte dans le Gers.</p>
+    <p class="footer__copyright">© 2026 Samaret — Gîte dans le Gers.</p>
   </div>
 </footer>
 
@@ -2645,6 +2649,8 @@ const I18n = (() => {
     "cta.p": "Pick your dates and book direct.",
     "cta.dates": "See availability",
     "cta.mail": "Write to us",
+    "map.open": "Open in Google Maps ↗",
+    "h3.map": "Getting here",
     "gb.head": "Guestbook",
     "gb.invite": "Stayed at Samaret? The next page is yours.",
     "gb.sign": "Sign the guestbook",

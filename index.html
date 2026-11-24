@@ -1,0 +1,2793 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Samaret — Gîte au cœur de la Ténarèze, Gers</title>
+<meta name="description" content="Samaret, gîte au milieu des vignes et des champs de tournesol, au cœur de la Ténarèze (Gers). Flaran, Fourcès, Larressingle et Lavardens à moins de 30 minutes.">
+
+<!-- Open Graph -->
+<meta property="og:title" content="Samaret — Gîte dans le Gers">
+<meta property="og:description" content="Gîte au milieu des vignes et des tournesols, au cœur de la Ténarèze.">
+<meta property="og:image" content="images/hero-poster-v3.jpg">
+
+<style>
+@font-face {
+  font-family: 'Rosaline';
+  src: url('fonts/Rosaline-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Satoshi';
+  src: url('fonts/Satoshi-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  /* Colors — warm minimal. One flat bone ground, warm ink for type, a single
+     clay accent, with sage + ochre kept quiet for status/data only. Token names
+     unchanged so every rule below inherits the new palette. */
+  /* Colors — the client's palette, exactly. No other hues anywhere: every
+     tint/shade below is one of these at an alpha. */
+  --color-bg: #F7F3EA;
+  --color-muted: #EFE8D8;
+  --color-text: #33291F;
+  --color-primary: #6B3E26;
+  --color-primary-hover: #56311D;
+  --color-accent-yellow: #E8A63C;
+  --color-accent-green: #55703B;
+  --color-accent-green-light: #D9E1C6;
+
+  --color-accent: var(--color-primary);              /* alias used by v3 rules */
+  --color-text-soft: rgba(51, 41, 31, 0.66);
+
+  --color-bg-rgb: 247, 243, 234;
+  --color-text-rgb: 51, 41, 31;
+  --color-primary-rgb: 107, 62, 38;
+
+  --color-border: rgba(var(--color-text-rgb), 0.12);
+  --shadow-sm: 0 1px 2px rgba(var(--color-text-rgb), 0.05);
+  --shadow-md: 0 6px 20px -8px rgba(var(--color-text-rgb), 0.18);
+  --shadow-lg: 0 20px 40px -18px rgba(var(--color-text-rgb), 0.28);
+  --ease-expo: cubic-bezier(.19, 1, .22, 1);
+
+  /* Typography */
+  --font-family-display: 'Rosaline', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-family-sans: 'Satoshi', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-base: 1rem;
+  --font-size-lg: 1.125rem;
+  --font-size-xl: 1.5rem;
+  --font-size-2xl: 2rem;
+  --font-size-3xl: 2.5rem;
+  --line-height-tight: 1.2;
+  --line-height-normal: 1.5;
+
+  /* Spacing */
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
+  --spacing-2xl: 3rem;
+  --spacing-3xl: 4rem;
+
+  /* Layout */
+  --side-margin: 10%;
+  --container-max: 1280px;
+  --header-height: 64px;
+  --scrollbar-w: 0px;   /* set by JS = viewport minus content width; keeps full-bleed exact next to a classic scrollbar (stays 0 on overlay scrollbars) */
+
+  /* Borders & radius */
+  --border-radius-sm: 0.25rem;
+  --border-radius-md: 0.375rem;
+  --border-radius-lg: 0.5rem;
+  --border-radius-image: clamp(10px, 1.2vw, 16px);
+  /* Arched farmhouse window: round top, softly squared base. In % so it scales
+     with the Le Gîte photo morph and lands exactly on the gallery slide. */
+  --arch: 50% 50% 6% 6% / 50% 50% 6% 6%;
+  --radius-card: clamp(20px, 2.2vw, 32px);  /* responsive ≈16px — gallery photos */
+  --border-width: 1px;
+
+  /* Transitions */
+  --transition-fast: 150ms ease;
+  --transition-normal: 300ms ease;
+  --transition-slow: 500ms ease;
+  --ease-out-soft: cubic-bezier(.16, 1, .3, 1);
+
+  /* Z-index */
+  --z-sticky: 100;
+  --z-modal: 1000;
+}
+
+/* Reset */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { -webkit-text-size-adjust: 100%; overflow-x: hidden; scrollbar-gutter: stable; }
+body { font-family: var(--font-family-sans); font-size: var(--font-size-base); line-height: var(--line-height-normal); overflow-x: hidden; }
+/* Fixed gradient backdrop as its own composited layer. `background-attachment:fixed`
+   repaints the whole viewport every scroll frame — on a ~7900px page that stutters
+   with smooth scroll. A position:fixed layer looks identical but is GPU-composited. */
+body { background: var(--color-bg); -webkit-font-smoothing: antialiased; }
+/* Flat bone ground + a whisper of paper grain for warmth (fixed, composited layer). */
+body::before { content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .2 0 0 0 0 .16 0 0 0 0 .12 0 0 0 .04 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"), linear-gradient(315deg, #C77E3A 0%, #D9C4A3 35%, #EFE8D8 75%); }  /* the original Samaret gradient */
+::selection { background: var(--color-accent); color: var(--color-bg); }
+
+img, picture, video, canvas, svg { display: block; max-width: 100%; }
+input, button, textarea, select { font: inherit; color: inherit; }
+button { background: none; border: none; cursor: pointer; }
+a { color: inherit; text-decoration: none; }
+ul, ol { list-style: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ============================================= */
+/* Lenis smooth scroll — helper styles (essential subset of lenis.css v1.3).
+   Stops native smooth-scroll from fighting Lenis and supports the nested-scroll
+   / stopped states. Lenis is enabled in JS (SmoothScroll), only when motion
+   isn't reduced. The default `iframe { pointer-events:none }` rule is omitted
+   on purpose so the Carte map stays interactive. */
+/* ============================================= */
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+.lenis.lenis-stopped { overflow: hidden; }
+
+/* Typography */
+/* Rosaline ships at 400 only — no faux-bold. Large, tight, airy. */
+h1, h2, h3 { font-family: var(--font-family-display); font-weight: 400; line-height: 1.05; letter-spacing: -0.015em; margin-bottom: var(--spacing-lg); }
+h1 { font-size: clamp(2.5rem, 6vw, 4.5rem); }
+h2 { font-size: clamp(2.75rem, 7vw, 6rem); letter-spacing: -0.02em; line-height: 1; margin-bottom: clamp(1.5rem, 3vw, 2.75rem); }
+h3 { font-family: var(--font-family-sans); font-size: var(--font-size-xs); font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: var(--color-text-soft); line-height: 1.4; }
+p { margin-bottom: var(--spacing-md); max-width: 65ch; }
+a { text-underline-offset: 0.2em; text-decoration-thickness: 1px; }
+a:hover { text-decoration: underline; }
+.text-small { font-size: var(--font-size-sm); }
+
+/* h2 mask-reveal (Reveal module wraps the text in .mask > span) */
+.mask { display: block; overflow: hidden; padding-bottom: 0.08em; margin-bottom: -0.08em; }
+.mask > span { display: block; transform: translateY(105%); transition: transform 1.2s var(--ease-expo); }
+.is-visible .mask > span, .mask.is-visible > span { transform: none; }
+
+/* ============================================= */
+/* Layout — mobile-first, 10% side margin at every breakpoint */
+/* ============================================= */
+main > section, .footer {
+  padding: var(--spacing-3xl) var(--side-margin);
+}
+
+@media (min-width: 640px) {
+  main > section, .footer {
+    padding: clamp(5rem, 12vh, 9rem) var(--side-margin);
+  }
+}
+
+/* Dark theme — footer only: flat warm ink, no gradient. */
+.theme-dark {
+  background: linear-gradient(160deg, #8A4A2A 0%, #6E3A20 45%, #2B2118 100%);   /* original footer browns */
+  color: var(--color-bg);
+}
+
+/* ============================================= */
+/* Header — fixed, transparent, logo left, tile-menu right */
+/* ============================================= */
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;   /* fixed → initial containing block (excludes the scrollbar); 100vw would run under it */
+  z-index: var(--z-sticky);
+  background: transparent;
+  padding: 0 2.5%;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--transition-normal);
+}
+
+.header.is-visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.header__container {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;    /* flat logo hidden — the 3D dock owns the top-left; only the menu toggle sits here */
+  height: var(--header-height);
+}
+
+/* The hero 3D logo flies into the top-left and stays as the site logo, so the
+   header's flat SVG logo is retired. */
+.header__logo { display: none; }
+
+.header__logo-img {
+  height: 32px;
+  width: auto;
+  filter: drop-shadow(0 1px 3px rgba(var(--color-text-rgb), 0.5));
+}
+
+/* Tile menu toggle: 2x2 grid of squares */
+.header__menu-toggle {
+  display: grid;
+  grid-template-columns: repeat(2, 4px);
+  grid-template-rows: repeat(2, 4px);
+  gap: 4px;
+  width: 44px;
+  height: 44px;
+  place-items: center;
+  align-content: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(var(--color-bg-rgb), 0.72);
+  -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+  transition: background-color var(--transition-fast);
+}
+
+.header__menu-toggle span {
+  width: 4px;
+  height: 4px;
+  background: var(--color-text);
+  border-radius: 50%;
+  transition: background-color var(--transition-fast), transform .4s var(--ease-expo);
+}
+
+.header__menu-toggle:hover span { background: var(--color-accent); }
+.header__menu-toggle[aria-expanded="true"] span:nth-child(1) { transform: translate(5px, 5px); }
+.header__menu-toggle[aria-expanded="true"] span:nth-child(2) { transform: translate(-5px, 5px); }
+.header__menu-toggle[aria-expanded="true"] span:nth-child(3) { transform: translate(5px, -5px); }
+.header__menu-toggle[aria-expanded="true"] span:nth-child(4) { transform: translate(-5px, -5px); }
+
+/* Nav dropdown — toggle-based at every breakpoint */
+.header__nav {
+  position: fixed;
+  top: calc(var(--header-height) + var(--spacing-sm));
+  right: 2.5%;
+  background: rgba(var(--color-bg-rgb), 0.92);
+  -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
+  border: 1px solid var(--color-border);
+  border-radius: 18px;
+  box-shadow: var(--shadow-lg);
+  padding: var(--spacing-lg) var(--spacing-xl);
+  display: none;
+  max-width: calc(100vw - 5%);
+}
+
+.header__nav.is-open { display: block; animation: nav-in .5s var(--ease-expo); }
+@keyframes nav-in { from { opacity: 0; transform: translateY(-8px) scale(.98); } }
+
+.header__nav-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.header__nav-link { font-family: var(--font-family-display); font-size: 1.6rem; white-space: nowrap; transition: color var(--transition-fast); }
+.header__nav-link:hover { color: var(--color-accent); text-decoration: none; }
+
+/* ============================================= */
+/* Buttons */
+/* ============================================= */
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-md) var(--spacing-lg);
+  font-size: var(--font-size-base);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background-color var(--transition-fast);
+  min-height: 48px;
+}
+
+.button--primary { background-color: var(--color-primary); color: var(--color-bg); }
+.button--primary:hover { background-color: var(--color-primary-hover); text-decoration: none; }
+.button:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
+.button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* Booking CTA — fixed bottom-right, hidden until Présentation ("Ici,") is scrolled past */
+.booking-fab {
+  position: fixed;
+  bottom: var(--spacing-lg);
+  right: var(--spacing-lg);
+  z-index: var(--z-sticky);
+  box-shadow: var(--shadow-lg);
+  opacity: 0;
+  transform: translateY(16px);
+  pointer-events: none;
+  transition: opacity var(--transition-normal), transform var(--transition-normal);
+}
+
+.booking-fab.is-visible {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+
+/* Sunflower booking badge — a round seal that replaces the plain FAB.
+   "Réservations" curves around the flower; on scroll the text ring and the
+   flower each spin (independently) via the FlowerBadgeSpin module. The disc
+   is opaque so it reads cleanly over any section it floats above. */
+.booking-flower {
+  --flower-size: clamp(108px, 20vw, 148px);
+  display: grid;
+  place-items: center;
+  width: var(--flower-size);
+  height: var(--flower-size);
+  padding: 0;
+  border-radius: 50%;
+  background: var(--color-bg);
+  text-decoration: none;
+  transition: opacity var(--transition-normal), transform var(--transition-normal), background-color var(--transition-fast);
+}
+.booking-flower > * { grid-area: 1 / 1; }          /* stack layers, all centered */
+
+.booking-flower__img {
+  width: 70%;
+  height: 70%;
+  object-fit: contain;
+  border-radius: 50%;                               /* clip the PNG's square white bg to a disc */
+  transform-origin: 50% 50%;
+  will-change: transform;
+}
+
+.booking-flower__ring {
+  width: 100%;
+  height: 100%;
+  transform-origin: 50% 50%;
+  will-change: transform;
+}
+.booking-flower__ring text {
+  font-family: var(--font-family-sans);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  fill: var(--color-text);
+}
+
+.booking-flower { border: 1px solid var(--color-border); }
+.booking-flower:hover { background: var(--color-muted); }
+.booking-flower:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 3px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .booking-flower__img, .booking-flower__ring { will-change: auto; }
+}
+
+/* ============================================= */
+/* Placeholder boxes (stand-ins for real photos) */
+/* ============================================= */
+.placeholder-box {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: var(--spacing-sm);
+  font-size: var(--font-size-xs);
+  color: var(--color-text);
+  color: var(--color-text-soft);
+  letter-spacing: 0.04em;
+  border: 1px solid rgba(var(--color-text-rgb), 0.08);
+  border-radius: inherit;
+}
+
+/* ============================================= */
+/* Hero — parallax background */
+/* ============================================= */
+.hero {
+  position: relative;
+  width: 100%;   /* in-flow block: content-box width already excludes the scrollbar; 100vw would overflow it */
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 var(--side-margin);
+  /* Wavy bottom edge on the hero itself: the video is clipped along a wave so the
+     page's fixed gradient (body::before) shows THROUGH beneath it and flows
+     straight into the trail — one continuous background, no separate element, so
+     there's nothing to mismatch and no seam. Mask = solid for the top, wave for
+     the bottom strip; composited together (union). */
+  --wave-h: 64px;
+  --hero-wave: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 120' preserveAspectRatio='none'%3E%3Cpath d='M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z' fill='%23fff'/%3E%3C/svg%3E");
+  /* v3: wave mask retired — clean straight edge reads more contemporary. */
+}
+@media (max-width: 640px) { .hero { --wave-h: 44px; } }
+
+.hero__bg {
+  position: absolute;
+  top: -20%;
+  left: 0;
+  width: 100%;
+  height: 140%;
+  background-color: var(--color-muted);
+  object-fit: cover;
+  will-change: transform;
+}
+
+.hero__overlay { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(var(--color-text-rgb), .3) 0%, rgba(var(--color-text-rgb), .08) 45%, rgba(var(--color-text-rgb), .5) 100%); }
+.hero__tagline { font-size: var(--font-size-sm); letter-spacing: 0.14em; text-transform: uppercase; max-width: 42ch; opacity: .92; }
+
+.hero__content {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  color: var(--color-bg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;   /* tagline sits low; the 3D logo (fixed dock) owns the centre */
+  padding-bottom: clamp(4.5rem, 15vh, 9rem);
+  gap: var(--spacing-lg);
+}
+
+.hero__title, .hero__tagline { color: var(--color-bg); }
+
+.hero__title-logo {
+  width: min(85vw, 420px);
+  height: auto;
+  filter: drop-shadow(0 2px 6px rgba(var(--color-text-rgb), 0.5));
+}
+
+/* ---- Hero scatter circles ------------------------------------------------
+   4 round placeholders clustered around the logo; JS (HeroScatter) sets their
+   asymmetric resting offsets and scrubs them off the edges on scroll. Swap
+   each .hero__circle's inner box for an <img> later. */
+.hero__scatter {
+  position: absolute;
+  inset: 0;
+  z-index: 1;                   /* above video/overlay, below the fixed logo dock */
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.hero__circle {
+  position: absolute;
+  top: 50%;
+  left: 50%;                    /* JS centres via xPercent/yPercent then offsets */
+  width: clamp(78px, 9.5vw, 128px);
+  aspect-ratio: 3 / 4;
+  border-radius: var(--arch);
+  overflow: hidden;
+  will-change: transform;
+  box-shadow: 0 24px 48px -20px rgba(0,0,0,.45);
+}
+
+.hero__circle .placeholder-box {
+  border-radius: inherit;
+  border-color: rgba(var(--color-bg-rgb), 0.35);
+  color: var(--color-bg);
+  /* Flat translucent fill (no backdrop-blur): the blur re-sampled the video
+     backdrop every frame while these circles fling across the pinned hero — the
+     heaviest paint in that section. Real photos will fill these slots anyway. */
+  background: rgba(var(--color-bg-rgb), 0.16);
+}
+
+/* ---- 3D logo dock --------------------------------------------------------
+   The <model-viewer> lives in a FIXED, screen-centred dock. HeroScatter
+   ambient-bounces it, then (from 50% scroll) flies it to the top-left corner
+   where it stays for the rest of the page as the site logo. Grab to rotate;
+   no auto-rotate. Rendered large and scaled DOWN when docked so it stays crisp. */
+.logo-dock {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  z-index: 95;                  /* above sections, below header nav (z-sticky:100) */
+  pointer-events: none;         /* wrapper ignores events; the model re-enables them */
+  will-change: transform;
+}
+
+.logo-dock__model {
+  width: min(86vw, 460px);
+  height: min(50vh, 440px);
+  background-color: transparent;
+  --poster-color: transparent;
+  pointer-events: auto;         /* grabbable */
+  cursor: grab;
+  /* Dark shadow (legible on light sections) + faint cream halo (legible on the
+     dark brown gradient sections) so the docked mark reads over anything. */
+  filter: drop-shadow(0 2px 6px rgba(51, 41, 31, 0.3)) drop-shadow(0 0 6px rgba(247, 243, 234, 0.35));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__scatter { display: none; }
+}
+
+.hero__scroll-indicator {
+  position: absolute;
+  bottom: var(--spacing-lg);
+  left: 50%;
+  transform: translateX(-50%);
+  width: 1px;
+  height: 48px;
+  background: rgba(var(--color-bg-rgb), 0.25);
+  overflow: hidden;
+  z-index: 1;
+}
+.hero__scroll-indicator::after { content: ""; position: absolute; inset: 0; background: var(--color-bg); transform-origin: top; animation: cue 2.4s var(--ease-expo) infinite; }
+@keyframes cue { 0% { transform: scaleY(0); transform-origin: top; } 45% { transform: scaleY(1); transform-origin: top; } 55% { transform: scaleY(1); transform-origin: bottom; } 100% { transform: scaleY(0); transform-origin: bottom; } }
+
+/* ============================================= */
+/* Présentation */
+/* ============================================= */
+.presentation__container {
+  max-width: none;              /* span the full width allowed by the section's side margins */
+  margin: 0 auto;
+}
+
+/* Body copy: ~2× base, full width (overrides the global p { max-width: 65ch }). */
+.presentation__body {
+  max-width: none;
+  font-size: clamp(1.5rem, 1rem + 1.9vw, 2rem);
+  line-height: 1.35;
+  margin-bottom: var(--spacing-lg);
+  opacity: 0;                   /* hidden until the line-reveal runs (JS restores; <noscript> too) */
+}
+.presentation__body:last-child { margin-bottom: 0; }
+
+/* GSAP line-by-line reveal — each visual line is masked, its inner slides up. */
+.reveal-line { display: block; overflow: hidden; }
+.reveal-line__inner { display: block; }   /* will-change is toggled in JS only for the life of the one-time reveal */
+
+/* ============================================= */
+/* Le Gîte */
+/* ============================================= */
+.le-gite__container { max-width: var(--container-max); margin: 0 auto; }
+
+/* Intro: the main picture fills ~the screen (90vw x 90vh) when you reach the
+   section, then GSAP pins it and scrubs it smaller + fades it as you scroll,
+   handing off to the gallery + rest of the section revealing behind it. */
+.le-gite__intro {
+  position: relative;
+  left: 50%;
+  width: calc(100vw - var(--scrollbar-w));
+  margin-left: calc(-50vw + var(--scrollbar-w) / 2);
+  margin-top: calc(-1 * var(--spacing-3xl));
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* overflow must stay visible: the image travels OUT of this stage via
+     transform (document-anchored, reference-build mechanism). */
+  background: transparent;   /* let the site's fixed gradient show behind the featured photo */
+  z-index: 5;
+}
+
+@media (min-width: 640px) {
+  .le-gite__intro { margin-top: calc(-1 * clamp(5rem, 12vh, 9rem)); }
+}
+
+.le-gite__intro-img {
+  width: 90vw;
+  height: 90vh;
+  border-radius: var(--arch);
+  background-color: var(--color-accent-green-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: var(--spacing-md);
+  color: var(--color-text);
+  font-size: var(--font-size-sm);
+  transform-origin: top left; /* reference-build math: translate+scale from top-left */
+  /* will-change is set in JS while the morph scrubs, then released on commit —
+     it animates once, so it shouldn't hold a compositor layer for the whole page. */
+}
+
+/* Swipeable room gallery — full-bleed, breaks out of the section's side margin */
+.room-gallery {
+  position: relative;
+  width: calc(100vw - var(--scrollbar-w));
+  left: 50%;
+  margin-left: calc(-50vw + var(--scrollbar-w) / 2);
+  margin-top: var(--spacing-xl);
+  margin-bottom: var(--spacing-xl);
+}
+
+.room-gallery__track {
+  position: relative;
+  display: flex;
+  overflow-x: auto;
+  /* overflow-x:auto alone forces overflow-y to compute to auto, which makes this
+     a vertical scroll container that swallows the first vertical wheel event.
+     Pinning overflow-y:hidden keeps it horizontal-only. Snapping is handled in JS
+     (needed for the infinite loop), so native scroll-snap is intentionally off. */
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  gap: var(--spacing-sm);
+  scrollbar-width: none;
+  touch-action: pan-x;
+  overscroll-behavior-x: contain;
+}
+
+.room-gallery__track::-webkit-scrollbar { display: none; }
+
+.room-gallery__slide {
+  flex: 0 0 80%;
+  aspect-ratio: 1 / 1;
+  border-radius: var(--arch);
+  overflow: hidden;                                 /* clip real photos to the rounded corners */
+}
+
+@media (min-width: 640px) {
+  .room-gallery__slide { flex-basis: 56%; }
+}
+
+@media (min-width: 1024px) {
+  .room-gallery__slide { flex-basis: 44%; }
+}
+
+.room-gallery__nav { display: none; }
+
+@media (min-width: 640px) {
+  .room-gallery__nav {
+    display: flex;
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    transform: translateY(-50%);
+    justify-content: space-between;
+    padding: 0 var(--spacing-sm);
+    pointer-events: none;
+  }
+  .room-gallery__nav button {
+    pointer-events: auto;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: rgba(var(--color-bg-rgb), 0.82);
+    -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+    border: 1px solid var(--color-border);
+    transition: background-color var(--transition-fast), color var(--transition-fast), transform .5s var(--ease-expo);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--font-size-lg);
+  }
+}
+
+.room-gallery__dots {
+  display: flex;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  margin-top: var(--spacing-md);
+}
+
+@media (min-width: 640px) { .room-gallery__nav button:hover { background: var(--color-text); color: var(--color-bg); transform: scale(1.06); } }
+.room-gallery__dot {
+  width: 18px;
+  height: 2px;
+  border-radius: 2px;
+  background: rgba(var(--color-text-rgb), 0.18);
+  transition: background-color .4s ease, width .6s var(--ease-expo);
+}
+
+.room-gallery__dot.is-active { background: var(--color-text); width: 40px; }
+
+/* Calendar shell */
+.calendar-section {
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-lg);
+  margin: var(--spacing-xl) 0;
+}
+
+/* ---- Infos / Équipements / Disponibilités ---------------------------- */
+.gite-info { display: grid; gap: clamp(3.5rem, 8vw, 6.5rem); margin-top: clamp(3rem, 7vw, 6rem); }
+.gite-info h3 { margin-bottom: 1.5rem; }
+
+/* 1. At a glance — four big facts on one line (2×2 on phones) */
+.glance { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0; margin: 0; border-top: 1px solid var(--color-border); }
+@media (min-width: 900px) { .glance { grid-template-columns: repeat(4, 1fr); } }
+.glance__item { padding: 1.25rem 1.25rem 1.25rem 0; border-bottom: 1px solid var(--color-border); }
+@media (min-width: 900px) { .glance__item + .glance__item { padding-left: 1.25rem; border-left: 1px solid var(--color-border); } }
+.glance dt { font-size: var(--font-size-xs); letter-spacing: .16em; text-transform: uppercase; color: var(--color-text-soft); margin-bottom: .5rem; }
+.glance dd { margin: 0; font-size: clamp(1.05rem, 1.5vw, 1.3rem); line-height: 1.35; }
+.glance__note { margin: 1rem 0 0; font-size: var(--font-size-sm); color: var(--color-text-soft); max-width: none; }
+.glance__note a { color: var(--color-text); text-decoration: underline; }
+
+/* 2. Équipements — one card per room */
+.equip-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 210px), 1fr)); gap: var(--spacing-sm); }
+.equip { padding: 1.5rem; border-radius: var(--radius-card); background: rgba(var(--color-bg-rgb), .6); border: 1px solid var(--color-border);
+  transition: background-color .4s ease, translate .6s var(--ease-expo); }
+.equip:hover { background: var(--color-bg); translate: 0 -3px; }
+.equip__icon { width: 30px; height: 30px; fill: none; stroke: var(--color-primary); stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round; margin-bottom: 1.25rem; }
+.equip__title { font-family: var(--font-family-display); font-size: 1.5rem; font-weight: 400; margin: 0 0 .9rem; }
+.equip__items { display: flex; flex-wrap: wrap; gap: .4rem; }
+.equip__items li { font-size: var(--font-size-sm); padding: .3rem .75rem; border-radius: 999px; background: rgba(var(--color-text-rgb), .06); }
+
+/* 3. Disponibilités + À proximité — calendar leads, nearby list beside it */
+.le-gite__practical { display: grid; grid-template-columns: 1fr; gap: clamp(2.5rem, 6vw, 5rem); align-items: start; }
+@media (min-width: 1024px) { .le-gite__practical { grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); } }
+.le-gite__practical .calendar-section { margin: 0; padding: 0; }
+@media (min-width: 1024px) {
+  .le-gite__practical .calendar-section { max-height: none; overflow: hidden; }
+  .le-gite__practical .calendar-disclaimer { display: none; }
+}
+.nearby__list { margin: 0; border-top: 1px solid var(--color-border); }
+.nearby__row { display: flex; align-items: baseline; gap: 1rem; padding: 1rem 0; border-bottom: 1px solid var(--color-border); }
+.nearby__row dt { flex: 1; }
+.nearby__row dd { margin: 0; font-size: var(--font-size-sm); letter-spacing: .06em; color: var(--color-primary); white-space: nowrap; }
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: var(--spacing-xs);
+  margin-top: var(--spacing-md);
+}
+
+@media (min-width: 640px) {
+  .calendar-grid { gap: var(--spacing-sm); }
+}
+
+.calendar-header { display: flex; align-items: center; justify-content: space-between; }
+.calendar-header h4 { font-family: var(--font-family-display); font-size: var(--font-size-base); margin-bottom: 0; }
+.calendar-nav { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px solid var(--color-border); flex-shrink: 0; transition: background-color var(--transition-fast), color var(--transition-fast); }
+.calendar-nav:hover { background: var(--color-text); color: var(--color-bg); }
+.day-header { font-weight: 500; color: var(--color-text-soft); letter-spacing: .08em; text-align: center; padding: var(--spacing-xs); font-size: var(--font-size-xs); text-transform: uppercase; }
+.day { aspect-ratio: 1; display: flex; align-items: center; justify-content: center; border-radius: var(--border-radius-md); cursor: pointer; transition: transform var(--transition-fast), background-color var(--transition-fast); font-weight: 500; font-size: var(--font-size-sm); width: 100%; border-radius: 50%; }
+.day--empty { visibility: hidden; cursor: default; }
+.day.available { background-color: transparent; color: var(--color-text); }
+.day.available:hover { background-color: var(--color-accent-green-light); }
+.day.booked { background-color: transparent; color: rgba(var(--color-text-rgb), .3); text-decoration: line-through; cursor: not-allowed; }
+.day.today { box-shadow: inset 0 0 0 1px var(--color-accent); }
+.day.selected { background-color: var(--color-text); color: var(--color-bg); }
+.day:hover.available { transform: scale(1.05); }
+
+.calendar-legend { display: flex; flex-wrap: wrap; gap: var(--spacing-md); margin-top: var(--spacing-md); }
+.calendar-legend__dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: var(--spacing-xs); }
+.calendar-legend { font-size: var(--font-size-xs); color: var(--color-text-soft); }
+.calendar-legend__dot--available { background-color: var(--color-text); }
+.calendar-legend__dot--booked { background-color: rgba(var(--color-text-rgb), .2); }
+.calendar-legend__dot--today { background-color: transparent; border: 1px solid var(--color-accent); }
+.calendar-disclaimer { margin-top: var(--spacing-sm); margin-bottom: 0; font-style: italic; opacity: 0.7; }
+
+
+.le-gite__details { display: grid; grid-template-columns: 1fr; gap: var(--spacing-xl); }
+
+@media (min-width: 640px) {
+  .le-gite__details { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* Tarifs — a quiet indication under the calendar */
+.tarifs { margin-top: 1.5rem; padding-top: 1.25rem; border-top: 1px solid var(--color-border); }
+.tarifs p { margin: 0; max-width: none; }
+.tarifs__price { font-size: clamp(1.05rem, 1.4vw, 1.2rem); line-height: 1.4; }
+.tarifs__price strong { font-family: var(--font-family-display); font-weight: 400; font-size: 1.6em; color: var(--color-primary); }
+.tarifs__detail { margin-top: .4rem !important; font-size: var(--font-size-sm); color: var(--color-text-soft); }
+.tarifs__detail a { color: var(--color-text); text-decoration: underline; display: inline-block; }
+
+/* ============================================= */
+/* Découvrir (marquee) */
+/* ============================================= */
+.decouvrir {
+  overflow: hidden;
+  padding-left: 0;
+  padding-right: 0;
+}
+.decouvrir__heading { text-align: center; padding: 0 var(--side-margin); }
+.marquee { overflow: hidden; width: 100%; }
+.marquee__content { display: flex; gap: var(--spacing-2xl); width: fit-content; animation: marquee-scroll 45s linear infinite; }
+.marquee__content.is-gsap { animation: none; }   /* JS takes over: speed + direction follow the scroll */
+.marquee { padding: 1rem 0; }
+.marquee__item { display: flex; flex-direction: row; align-items: center; gap: .9rem; font-family: var(--font-family-display); font-size: clamp(2.25rem, 6vw, 5rem); line-height: 1; letter-spacing: -0.02em; white-space: nowrap; }
+.marquee__item:nth-child(even) { color: var(--color-accent); }
+.marquee__item::after { content: ""; width: .32em; height: .42em; margin-left: clamp(1.25rem, 3vw, 3rem); background: currentColor; border-radius: 50% 50% 2px 2px / 60% 60% 2px 2px; opacity: .9; }  /* tiny arch — echoes the window shapes */
+
+@keyframes marquee-scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+/* ============================================= */
+/* Météo */
+/* ============================================= */
+.meteo [data-weather] { max-width: 400px; margin: 0 auto; }
+
+/* ============================================= */
+/* Avis */
+/* ============================================= */
+.avis__container { max-width: var(--container-max); margin: 0 auto; }
+
+/* Livre d'or — an open book, not cards. Pages sit on the gradient as pale
+   leaves; a soft spine shadow runs down the gutter; running heads at the top,
+   folio at the foot, a drop cap, and the guest signs in Rosaline. */
+.guestbook { margin-top: clamp(2rem, 5vw, 4rem); }
+.guestbook__spread { position: relative; display: grid; grid-template-columns: 1fr; counter-reset: folio;
+  background: rgba(var(--color-bg-rgb), .82); border: 1px solid var(--color-border); border-radius: 6px;
+  box-shadow: 0 1px 0 rgba(var(--color-text-rgb), .04), 0 40px 70px -50px rgba(var(--color-text-rgb), .55); }
+@media (min-width: 900px) {
+  .guestbook__spread { grid-template-columns: 1fr 1fr; }
+  .guestbook__spread::after {          /* the spine */
+    content: ""; position: absolute; top: 0; bottom: 0; left: 50%; width: 64px; margin-left: -32px; pointer-events: none;
+    background: linear-gradient(90deg, transparent, rgba(var(--color-text-rgb), .07) 46%, rgba(var(--color-text-rgb), .14) 50%, rgba(var(--color-text-rgb), .07) 54%, transparent); }
+}
+.testimonial { counter-increment: folio; position: relative; display: flex; flex-direction: column;
+  min-height: clamp(380px, 46vh, 520px); padding: clamp(1.75rem, 4vw, 3.5rem) clamp(1.5rem, 4.5vw, 4rem) 3.5rem; }
+.testimonial[hidden] { display: none; }
+.testimonial::after { content: counter(folio); position: absolute; bottom: 1.4rem; left: 0; right: 0; text-align: center;
+  font-size: .75rem; letter-spacing: .12em; color: var(--color-text-soft); }
+.testimonial__head { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem;
+  padding-bottom: .9rem; margin-bottom: clamp(1.5rem, 3vw, 2.5rem); border-bottom: 1px solid var(--color-border);
+  font-size: var(--font-size-xs); letter-spacing: .18em; text-transform: uppercase; color: var(--color-text-soft); }
+.testimonial__rating { color: var(--color-primary); letter-spacing: .25em; font-size: .7rem; }
+.testimonial__text { font-size: clamp(1.02rem, 1.15vw, 1.15rem); line-height: 1.8; max-width: 46ch; text-align: justify; hyphens: auto; margin: 0; }
+.testimonial__text::first-letter { float: left; font-family: var(--font-family-display); font-size: 3.6em; line-height: .78; padding: .08em .12em 0 0; color: var(--color-primary); }
+.testimonial__author { margin: auto 0 0 !important; padding-top: 2rem; text-align: right;
+  font-family: var(--font-family-display); font-size: clamp(1.4rem, 2vw, 1.85rem); line-height: 1.1; color: var(--color-text); }
+.testimonial__author::before { content: "— "; color: var(--color-text-soft); }
+.testimonial--invite { justify-content: center; }
+.testimonial--invite .testimonial__head { margin-bottom: auto; }
+.testimonial__invite { font-family: var(--font-family-display); font-size: clamp(1.6rem, 2.6vw, 2.4rem); line-height: 1.15; max-width: 16ch; margin: auto 0 1.5rem; }
+.testimonial__sign { align-self: flex-start; margin-bottom: auto; padding: .75rem 1.4rem; border-radius: 999px; border: 1px solid var(--color-text);
+  font-size: var(--font-size-sm); transition: background-color .3s, color .3s; }
+.testimonial__sign:hover { background: var(--color-text); color: var(--color-bg); text-decoration: none; }
+.guestbook__nav { display: flex; justify-content: center; align-items: center; gap: 1.25rem; margin-top: 1.5rem; }
+.guestbook__btn { width: 48px; height: 48px; border-radius: 50%; border: 1px solid var(--color-border); font-size: 1.1rem;
+  transition: background-color .3s, color .3s, opacity .3s; }
+.guestbook__btn:hover { background: var(--color-text); color: var(--color-bg); }
+.guestbook__btn:disabled { opacity: .3; pointer-events: none; }
+.guestbook__count { font-size: var(--font-size-sm); letter-spacing: .12em; min-width: 5ch; text-align: center; }
+
+/* ============================================= */
+/* Carte */
+/* ============================================= */
+#map-section {
+  position: relative;
+  width: 100%;
+  padding-bottom: 75%;
+  height: 0;
+  overflow: hidden;
+  border-radius: var(--border-radius-image);
+  background: var(--color-muted);
+  filter: grayscale(.6) sepia(.15);
+}
+
+@media (min-width: 640px) {
+  #map-section { padding-bottom: 56.25%; }
+}
+
+/* pointer-events:none lets the wheel pass through to Lenis — an interactive
+   iframe swallows scroll and strands the page near the bottom. Fine while the
+   map is a placeholder; swap for a click-to-activate overlay with a real map. */
+#map-section iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; pointer-events: none; }
+
+/* ============================================= */
+/* Footer */
+/* ============================================= */
+/* Footer: flex column, content centered vertically & horizontally, NO set
+   height — its height is just the content + 2.5vh top & bottom padding
+   (overrides the global section padding). Horizontal side-margin untouched. */
+.footer {
+  border-radius: var(--radius-card) var(--radius-card) 0 0;
+  padding-top: 1.5rem !important;      /* compact strip — overrides the section padding */
+  padding-bottom: 1.25rem !important;
+  font-size: var(--font-size-xs);
+  letter-spacing: .04em;
+}
+.footer a { opacity: .75; transition: opacity var(--transition-fast); }
+.footer a:hover { opacity: 1; text-decoration: none; }
+
+.footer__container {
+  max-width: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-sm);
+  text-align: center;
+}
+
+.footer__copyright { margin: 0; opacity: .5; }   /* drop the global <p> bottom margin */
+
+.footer__contact, .footer__legal {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--spacing-xs) var(--spacing-lg);
+}
+
+/* Desktop: one single line — contact · legal · copyright */
+@media (min-width: 900px) {
+  .footer__container { flex-direction: row; justify-content: space-between; gap: var(--spacing-xl); }
+}
+
+/* ============================================= */
+/* Scroll reveal — applied per element (see [data-reveal] on items, not sections) */
+/* ============================================= */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 1.1s var(--ease-expo), transform 1.3s var(--ease-expo);
+}
+[data-reveal].is-visible { opacity: 1; transform: none; }
+/* headings use the line mask instead of the fade-rise */
+h2[data-reveal] { opacity: 1; transform: none; }
+
+
+/* Utilities */
+.hidden { display: none; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; }
+
+.le-gite__cover {
+  position: fixed;
+  inset: 0;
+  background: var(--color-bg);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* ============================================= */
+/* 2. Présentation — terracotta trail (scroll-drawn winding road) */
+/* Self-contained: #trail-page (.trail__page) spans ONLY this section, not the
+   document, so the shared GSAP/Lenis engine and the pinned hero / Le Gîte
+   scrubs are untouched. Trail stroke colors kept exactly as provided. */
+/* ============================================= */
+.trail { padding: 0; position: relative; }
+
+.trail__page { position: relative; }
+
+.trail__section {
+  min-height: 30vh;                 /* half the previous height — tighter run of blocks 01–05 */
+  display: flex; align-items: center;
+  padding: 3rem 10vw;
+  position: relative; z-index: 1;
+}
+
+/* Arched aside picture per Présentation block. It sits on the side opposite
+   the text, bleeds off that screen edge, and its round (arched) side faces the
+   text. JS (TrailPath) slides it in from that edge, scrubbed with the scroll. */
+.trail { --media-w: 38vw; --media-h: min(62vh, 30vw); }
+.trail__section { min-height: calc(var(--media-h) + 6rem) !important; overflow: hidden; }
+.trail__content { max-width: min(520px, 42vw) !important; position: relative; z-index: 1; }
+.trail__media { position: absolute; top: 0; bottom: 0; margin: auto 0; width: var(--media-w); height: var(--media-h); overflow: hidden; z-index: 0; }
+.trail__section:nth-child(odd)  .trail__media { right: 0; border-radius: 100vh 0 0 100vh; }   /* text left → arch faces left  */
+.trail__section:nth-child(even) .trail__media { left: 0;  border-radius: 0 100vh 100vh 0; }   /* text right → arch faces right */
+.trail__media-img { width: 100%; height: 100%; border: 0; border-radius: 0; will-change: transform; }
+
+@media (max-width: 640px) {
+  .trail { --media-w: 82vw; --media-h: 46vw; }
+  .trail__section { display: flex; flex-direction: column; align-items: stretch; min-height: 0 !important; padding-top: 2.5rem; padding-bottom: 2.5rem; }
+  .trail__content { max-width: none !important; }
+  .trail__media { position: relative; top: auto; bottom: auto; margin: 0 0 1.75rem; }
+  .trail__section:nth-child(odd)  .trail__media { align-self: flex-end;   margin-right: -8vw; }
+  .trail__section:nth-child(even) .trail__media { align-self: flex-start; margin-left: -8vw; }
+}
+
+/* Blocks alternate: odd = left, even = right (phones: all left). */
+.trail__section:nth-child(odd)  .trail__content { margin-right: auto; }
+.trail__section:nth-child(even) .trail__content { margin-left: auto; text-align: right; }
+
+.trail__content {
+  /* Capped so the text always fits within its own half (≤ ~38vw beside a 10vw
+     margin), leaving ≥50vw clear on the road's side — the weaving road never
+     runs under the text. On wide screens this resolves to the full 480px. */
+  max-width: min(560px, 46vw);
+  opacity: 0;   /* container shown by JS, then its h2 + p rise + un-blur in (TrailPath) */
+}
+.trail__index {
+  display: flex; align-items: center; gap: .75rem;
+  font-family: var(--font-family-display); font-size: 1.75rem; line-height: 1;
+  color: var(--color-accent); margin-bottom: 1rem;
+}
+.trail__index::before { content: "n°"; font-size: .55em; margin-right: -.45rem; opacity: .8; }
+.trail__section:nth-child(even) .trail__index::before { order: 1; }
+.trail__section:nth-child(even) .trail__index::after { order: 2; }
+.trail__index::after { content: ""; width: 48px; height: 1px; background: currentColor; transform-origin: left; transform: scaleX(var(--rule, 1)); }
+.trail__section:nth-child(even) .trail__index { flex-direction: row-reverse; }
+.trail__section:nth-child(even) .trail__index::after { transform-origin: right; }
+.trail__content h2 {
+  font-family: var(--font-family-display);
+  font-size: clamp(2.25rem, 4vw, 3.5rem); font-weight: 400; margin-bottom: 1.25rem; color: var(--color-text);
+  line-height: 1.02; letter-spacing: -0.02em;
+}
+.trail__content h2 .mask > span { transform: none; transition: none; } /* trail h2 is driven by GSAP */
+.trail__content p {
+  font-family: var(--font-family-sans);
+  font-size: 1.05rem; line-height: 1.75; color: var(--color-text-soft);
+  max-width: none; margin: 0;
+}
+.trail__content p span { color: var(--color-text); text-decoration: underline wavy; text-decoration-thickness: 1.5px; text-underline-offset: .28em; text-decoration-skip-ink: none; text-decoration-color: color-mix(in srgb, var(--color-accent) var(--hl, 0%), transparent); }
+
+/* Phones: the road runs as a rail down the LEFT and the text sits clear of it on
+   the RIGHT as one readable column — so the text is responsive yet never overlaps
+   the trail. (Desktop keeps the centred weave + alternating text.) */
+@media (max-width: 640px) {
+  .trail__section { min-height: 0; padding: 2.25rem 8vw; }
+  .trail__content { max-width: none; }
+  .trail__section:nth-child(odd) .trail__content,
+  .trail__section:nth-child(even) .trail__content { margin: 0; text-align: left; }
+  .trail__section:nth-child(even) .trail__index { flex-direction: row; }
+  .trail__section:nth-child(even) .trail__index::before { order: 0; margin: 0 -.45rem 0 0; }
+  .trail__section:nth-child(even) .trail__index::after { transform-origin: left; }
+  .trail__content h2 { font-size: clamp(1.7rem, 8vw, 2.5rem); }
+  .trail__content p  { font-size: clamp(0.95rem, 4vw, 1.1rem); }
+
+  /* Mobile perf: drop GPU-heavy filters that stutter phone scroll. No motion is
+     lost — the reveal and icons still animate, just without blur/shadow.
+     (The hero circles' backdrop-blur is now gone site-wide — see above.) */
+
+  /* 3D logo still renders and still flies to the corner (GSAP), but is
+     non-grabbable so a touch scrolls the page instead of rotating the model. */
+  .logo-dock__model { pointer-events: none; }
+}
+
+/* ============================================= */
+/* v3 EDGE — stacked panels, split headings, cursor, magnetics, progress  */
+/* Colours: only the palette tokens.                                      */
+/* ============================================= */
+/* Continuous canvas — no pinning. The page ground itself shifts between the
+   palette tokens as each section takes the screen (JS: BgShift sets
+   --page-bg / --page-fg on <html>; CSS transitions do the blend). */
+:root { --page-bg: var(--color-bg); --page-fg: var(--color-text); }
+html { color: var(--page-fg); transition: color .9s var(--ease-expo); }
+body { color: inherit; }
+
+/* Asymmetric heading positions — headings hang off a 12-col rhythm */
+#decouvrir .decouvrir__heading { text-align: left; }
+
+/* Split headings: word masks + chars (JS: SplitHeadings) */
+.split-word { display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: .12em; margin-bottom: -.12em; }
+.split-char { display: inline-block; transform-origin: 0 100%; }
+
+/* Scroll progress hairline */
+.progress { position: fixed; top: 0; left: 0; right: 0; height: 2px; z-index: 101; pointer-events: none;
+  background: var(--page-fg); transform-origin: 0 50%; transform: scaleX(0); transition: background-color .9s; }
+
+/* Cursor follower — the Samaret sunflower (fine pointers only). It turns
+   slowly on its own, blooms bigger + spins faster over links, and over the
+   gallery grows with a "Glisser" label. Native cursor kept except on the gallery. */
+.cursor { position: fixed; left: 0; top: 0; z-index: 9998; pointer-events: none;
+  width: 34px; height: 34px; margin: -17px 0 0 -17px; opacity: 0; transition: opacity .3s; }
+.cursor.is-on { opacity: 1; }
+.cursor__flower { width: 100%; height: 100%; object-fit: contain;
+  filter: drop-shadow(0 3px 5px rgba(var(--color-text-rgb), .22));
+  transition: scale .6s var(--ease-expo); animation: cursor-spin 14s linear infinite; }
+@keyframes cursor-spin { to { rotate: 360deg; } }
+.cursor.is-link .cursor__flower { scale: 1.6; animation-duration: 4s; }
+.cursor.is-drag .cursor__flower { scale: 2.3; animation-duration: 6s; }
+.cursor__label { position: absolute; left: 50%; top: 100%; translate: -50% 26px; white-space: nowrap;
+  font-size: 10px; letter-spacing: .16em; text-transform: uppercase; color: var(--page-fg);
+  opacity: 0; transition: opacity .3s; }
+.cursor.is-drag .cursor__label { opacity: 1; }
+@media (pointer: fine) { .room-gallery__track { cursor: none; } }
+
+/* Magnetic elements move by --mx/--my (translate, so existing transforms stay intact) */
+[data-magnetic] { translate: var(--mx, 0px) var(--my, 0px); }
+
+@media (prefers-reduced-motion: reduce), (pointer: coarse) { .cursor { display: none; } }
+
+/* FR / EN switch — fixed top-right, left of the menu toggle, visible from the
+   first screen (light over the hero video, ink once the header shows). */
+.lang-switch { position: fixed; top: calc((var(--header-height) - 36px) / 2); right: calc(2.5% + 52px); z-index: 101;
+  height: 36px; display: flex; align-items: center; gap: .15rem; padding: 0 .7rem; border-radius: 999px;
+  font-size: var(--font-size-xs); letter-spacing: .14em; color: var(--color-bg);
+  background: rgba(var(--color-text-rgb), .18); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+  transition: color .4s, background-color .4s; }
+.lang-switch span { opacity: .45; }
+.lang-switch button { padding: .25rem .3rem; opacity: .55; transition: opacity .2s; letter-spacing: inherit; }
+.lang-switch button[aria-pressed="true"] { opacity: 1; text-decoration: underline; text-underline-offset: .35em; }
+.lang-switch button:hover { opacity: 1; }
+.lang-switch button:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; border-radius: 4px; }
+body.is-past-hero .lang-switch { color: var(--color-text); background: rgba(var(--color-bg-rgb), .72); }
+
+/* ---- Desktop: inline menu + Réserver pill (phones keep the dot toggle) ---- */
+@media (min-width: 1024px) {
+  .header__menu-toggle { display: none; }
+  .header__nav { display: flex !important; position: fixed; top: 0; right: calc(2.5% + 112px); height: var(--header-height); align-items: center;
+    padding: 0; background: none; border: 0; box-shadow: none; -webkit-backdrop-filter: none; backdrop-filter: none; animation: none; }
+  .header__nav-list { flex-direction: row; align-items: center; gap: 1.75rem; }
+  .header__nav-link { font-family: var(--font-family-sans); font-size: var(--font-size-sm); letter-spacing: .04em; }
+  .header__nav-cta { padding: .55rem 1.1rem; border-radius: 999px; background: var(--color-text); color: var(--color-bg); }
+  .header__nav-cta:hover { background: var(--color-primary); color: var(--color-bg); }
+  .lang-switch { right: 2.5%; }
+}
+@media (max-width: 1023px) { .header__nav-cta { color: var(--color-primary); } }  /* dropdown: brown link; desktop: ink pill above */
+
+/* ---- Phone booking bar (replaces the sunflower badge on small screens) ---- */
+.book-bar { display: none; }
+@media (max-width: 640px) {
+  .booking-fab { display: none !important; }
+  .book-bar { position: fixed; left: 12px; right: 12px; bottom: calc(12px + env(safe-area-inset-bottom)); z-index: var(--z-sticky);
+    display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: .5rem .5rem .5rem 1.1rem; border-radius: 999px;
+    background: rgba(var(--color-bg-rgb), .9); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
+    border: 1px solid var(--color-border); box-shadow: var(--shadow-lg); font-size: var(--font-size-sm);
+    translate: 0 140%; transition: translate .6s var(--ease-expo); }
+  .book-bar.is-visible { translate: 0 0; }
+  .book-bar:hover { text-decoration: none; }
+  .book-bar__price strong { font-family: var(--font-family-display); font-weight: 400; font-size: 1.35em; color: var(--color-primary); }
+  .book-bar__cta { padding: .7rem 1.2rem; border-radius: 999px; background: var(--color-text); color: var(--color-bg); font-weight: 500; white-space: nowrap; }
+  .footer { padding-bottom: calc(1.5rem + 76px) !important; }   /* clear the bar */
+}
+
+/* ---- Phones: compact equipment cards (icon + title on one line) ---- */
+@media (max-width: 640px) {
+  .equip { padding: 1.1rem 1.2rem; display: grid; grid-template-columns: auto 1fr; column-gap: .75rem; align-items: center; }
+  .equip__icon { width: 24px; height: 24px; margin: 0; }
+  .equip__title { font-size: 1.3rem; margin: 0; }
+  .equip__items { grid-column: 1 / -1; margin-top: .8rem; }
+  .gite-info { gap: 3.5rem; }
+}
+
+/* ---- Closing CTA ---- */
+.closing { text-align: center; display: flex; flex-direction: column; align-items: center; }
+.closing__media { width: min(320px, 62vw); aspect-ratio: 3 / 4; border-radius: var(--arch); overflow: hidden; margin: 0 0 clamp(2rem, 5vw, 3.5rem); }
+.closing__media .placeholder-box { border: 0; }
+.closing h2 { margin-bottom: 1rem; }
+.closing__lede { color: var(--color-text-soft); margin: 0 auto 2rem; }
+.closing__actions { display: flex; flex-wrap: wrap; justify-content: center; gap: .75rem; }
+.closing__btn { padding: .95rem 1.6rem; border-radius: 999px; border: 1px solid var(--color-text); font-size: var(--font-size-sm); transition: background-color .3s, color .3s; }
+.closing__btn:hover, .closing__btn--solid { background: var(--color-text); color: var(--color-bg); text-decoration: none; }
+.closing__btn--solid:hover { background: var(--color-primary); border-color: var(--color-primary); }
+</style>
+<noscript><style>.presentation__body{opacity:1!important;}.trail__content{opacity:1!important;transform:none!important;}</style></noscript>
+</head>
+<body>
+
+<!-- ============================================= -->
+<!-- HEADER — fixed, transparent, logo left, tile menu right -->
+<!-- ============================================= -->
+<header class="header">
+  <div class="header__container">
+    <a href="#hero" class="header__logo" aria-label="Samaret — Accueil">
+      <svg class="header__logo-img" viewBox="0 0 744 178" role="img" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+        <path d="M127.208 160.28C118.504 160.28 110.781 158.616 104.04 155.288C97.2982 151.96 92.3488 146.84 89.1915 139.928L99.4315 129.56C101.565 135.363 105.277 139.715 110.568 142.616C115.944 145.517 121.576 146.968 127.464 146.968C132.072 146.968 135.784 146.072 138.6 144.28C141.501 142.488 142.952 139.757 142.952 136.088C142.952 132.248 141.544 129.475 138.728 127.768C135.912 125.976 131.304 124.397 124.904 123.032L116.84 121.24C113.426 120.557 110.354 119.704 107.624 118.68C104.978 117.571 102.376 116.12 99.8155 114.328C97.2555 112.451 95.2502 110.061 93.7995 107.16C92.4342 104.173 91.7515 100.76 91.7515 96.92C91.7515 89.1547 94.6528 83.096 100.456 78.744C106.258 74.3067 113.384 72.088 121.832 72.088C129.768 72.088 136.722 73.6667 142.696 76.824C148.669 79.9813 153.192 84.504 156.264 90.392L145.384 100.76C140.861 90.6053 132.712 85.528 120.936 85.528C116.754 85.528 113.341 86.4667 110.696 88.344C108.136 90.136 106.856 92.6533 106.856 95.896C106.856 99.3947 108.093 102.04 110.568 103.832C113.042 105.624 116.882 107.16 122.088 108.44L131.688 110.744C135.528 111.683 138.813 112.707 141.544 113.816C144.36 114.925 147.048 116.419 149.608 118.296C152.253 120.173 154.258 122.605 155.624 125.592C156.989 128.493 157.672 131.907 157.672 135.832C157.672 143.427 154.813 149.4 149.096 153.752C143.464 158.104 136.168 160.28 127.208 160.28ZM175.56 159H160.328L193.864 73.24H210.504L244.04 159H228.168L219.976 137.368H183.752L175.56 159ZM197.319 101.656L188.488 124.824H215.24L206.536 101.656L201.928 86.168L197.319 101.656ZM264.225 159H249.76V73.24H267.553L285.985 110.872L294.433 132.76L303.009 110.872L321.441 73.24H339.105V159H324.641V118.68L326.433 90.392L316.576 114.968L301.729 144.536H287.137L272.289 114.968L262.177 90.392L264.225 118.68V159ZM360.06 159H344.828L378.364 73.24H395.004L428.54 159H412.668L404.476 137.368H368.252L360.06 159ZM381.819 101.656L372.988 124.824H399.74L391.036 101.656L386.428 86.168L381.819 101.656ZM448.725 159H434.26V73.24H472.917C481.962 73.24 489.301 75.544 494.933 80.152C500.565 84.76 503.381 91.3307 503.381 99.864C503.381 106.776 501.247 112.365 496.981 116.632C492.714 120.899 487.082 123.416 480.085 124.184C484.778 125.635 488.661 129.005 491.733 134.296L506.325 159H489.685L474.837 133.528C473.215 130.712 471.21 128.707 468.821 127.512C466.517 126.317 463.317 125.72 459.221 125.72H448.725V159ZM471.509 86.04H448.725V113.944H471.509C482.773 113.944 488.405 109.379 488.405 100.248C488.405 90.776 482.773 86.04 471.509 86.04ZM575.683 159H515.01V73.24H575.683V86.04H529.475V108.824H567.747V121.624H529.475V146.2H575.683V159ZM619.821 159H605.357V86.04H579.117V73.24H646.189V86.04H619.821V159Z" fill="#000000"/>
+        <path d="M209.145 47.376C209.443 47.1627 209.721 47.056 209.977 47.056C210.233 47.056 210.361 47.2053 210.361 47.504V47.632C206.222 51.0453 202.979 53.52 200.633 55.056L187.833 63.376L183.865 68.944C177.721 77.3493 174.649 81.872 174.649 82.512C173.966 84.0053 173.305 84.752 172.665 84.752C171.854 84.752 171.449 84.2187 171.449 83.152C171.449 82.0853 171.982 80.656 173.049 78.864C174.073 77.072 175.097 75.6213 176.121 74.512L182.201 68.112C182.713 67.3013 183.758 65.808 185.337 63.632C186.915 61.456 187.961 60.0053 188.473 59.28L191.225 55.184L191.353 54.928C191.353 54.8427 191.31 54.8 191.225 54.8C188.707 56.8907 186.617 57.936 184.953 57.936C183.289 57.936 182.457 57.4667 182.457 56.528C182.457 55.5467 183.097 54.2667 184.377 52.688C185.657 51.1093 187.193 49.5733 188.985 48.08C190.819 46.5867 192.825 45.3067 195.001 44.24C197.219 43.1307 199.161 42.576 200.825 42.576C202.531 42.576 203.385 43.1733 203.385 44.368C203.385 45.2213 202.574 46.2453 200.953 47.44C199.374 48.6347 198.393 49.232 198.009 49.232C197.667 49.232 197.497 49.1467 197.497 48.976C197.497 48.72 197.667 48.4853 198.009 48.272C199.459 47.248 200.185 46.288 200.185 45.392C200.185 44.4533 199.801 43.984 199.033 43.984C197.155 43.984 194.531 45.584 191.161 48.784C187.833 51.9413 186.169 54.1813 186.169 55.504C186.169 55.888 186.467 56.08 187.065 56.08C187.705 56.08 188.771 55.5893 190.265 54.608C191.758 53.584 192.889 52.6027 193.657 51.664L195.385 49.488C195.598 49.1893 195.875 49.04 196.217 49.04C196.558 49.04 196.857 49.1467 197.113 49.36C197.369 49.5733 197.497 49.7867 197.497 50L189.753 60.752L199.225 54.8C202.041 53.0933 204.857 51.0453 207.673 48.656L209.145 47.376ZM203.953 57.296C203.953 56.0587 205.019 53.7333 207.153 50.32C209.286 46.864 210.843 45.136 211.825 45.136C212.55 45.136 212.913 45.4133 212.913 45.968C212.913 46.5227 211.931 48.0373 209.969 50.512C208.006 52.9867 207.025 54.7573 207.025 55.824C207.025 56.4213 207.238 56.72 207.665 56.72C208.134 56.72 209.265 56.1227 211.057 54.928C214.257 52.7947 217.201 50.64 219.889 48.464L221.297 47.312C221.638 47.0987 221.894 46.992 222.065 46.992C222.278 46.992 222.385 47.12 222.385 47.376V47.568C222.555 47.568 221.403 48.5067 218.929 50.384C216.497 52.2613 213.873 54.1387 211.057 56.016C208.283 57.8933 206.534 58.832 205.809 58.832C204.571 58.832 203.953 58.32 203.953 57.296ZM209.265 41.168C210.033 40.912 211.035 40.3573 212.273 39.504C213.51 38.6507 214.278 38.0107 214.577 37.584C214.918 37.1573 215.302 36.944 215.729 36.944C216.198 36.944 216.625 37.136 217.009 37.52C217.137 37.6907 217.265 38.288 217.393 39.312C217.563 40.2933 217.947 41.232 218.545 42.128C218.63 42.2987 218.673 42.4053 218.673 42.448C218.673 42.6613 218.545 42.768 218.289 42.768C218.033 42.768 217.713 42.5973 217.329 42.256C216.945 41.872 216.561 41.2747 216.177 40.464C215.793 39.6533 215.601 39.2267 215.601 39.184C214.577 40.1227 212.209 41.232 208.497 42.512C208.241 42.512 208.113 42.3627 208.113 42.064C208.113 41.7227 208.497 41.424 209.265 41.168ZM255.695 30.864L246.543 30.416C242.789 30.416 239.055 30.5653 235.343 30.864L235.663 32.144C235.663 32.6133 234.277 34.4053 231.503 37.52C228.73 40.592 225.957 43.9627 223.183 47.632C220.41 51.2587 219.023 53.9467 219.023 55.696C219.023 56.3787 219.258 56.72 219.727 56.72C220.239 56.72 221.37 56.1227 223.119 54.928C226.362 52.7947 229.327 50.64 232.015 48.464L233.423 47.312C233.722 47.0987 233.978 46.992 234.191 46.992C234.405 46.992 234.511 47.12 234.511 47.376V47.568C234.682 47.568 233.53 48.5067 231.055 50.384C228.623 52.2613 225.999 54.1387 223.183 56.016C220.41 57.8933 218.661 58.832 217.935 58.832C216.698 58.832 216.079 58.2773 216.079 57.168C216.079 55.5467 216.975 53.3067 218.767 50.448C220.602 47.5893 222.586 44.9013 224.719 42.384C226.895 39.824 228.943 37.4133 230.863 35.152C232.826 32.8907 233.893 31.504 234.063 30.992C229.37 31.4187 225.765 31.9307 223.247 32.528L221.967 32.784C221.626 32.8267 221.455 33.1467 221.455 33.744C221.455 34 221.157 34.128 220.559 34.128C219.962 34.128 219.215 34 218.319 33.744C217.466 33.4453 217.039 33.04 217.039 32.528C217.039 32.016 217.466 31.6747 218.319 31.504C224.634 30.3947 229.114 29.7333 231.759 29.52C234.405 29.264 236.154 29.1147 237.007 29.072C237.903 28.9867 239.269 28.9227 241.103 28.88C242.981 28.8373 244.239 28.816 244.879 28.816C246.799 28.7307 249.039 28.688 251.599 28.688C254.202 28.688 255.781 28.7947 256.335 29.008C256.89 29.2213 257.167 29.6267 257.167 30.224C257.167 30.6507 256.677 30.864 255.695 30.864ZM249.772 47.376C250.071 47.1627 250.348 47.056 250.604 47.056C250.86 47.056 250.988 47.2053 250.988 47.504V47.632C246.551 51.3013 242.86 54.0533 239.916 55.888C236.972 57.7227 234.306 58.64 231.916 58.64C229.996 58.64 229.036 57.7013 229.036 55.824C229.036 53.0507 230.444 50.2133 233.26 47.312C236.076 44.368 238.444 42.896 240.364 42.896C241.431 42.896 241.964 43.4933 241.964 44.688C241.751 47.0347 238.38 50.192 231.852 54.16V54.8C231.852 56.208 232.578 56.912 234.028 56.912C235.522 56.912 237.122 56.4213 238.828 55.44C242.156 53.4773 245.271 51.2373 248.172 48.72L249.772 47.376ZM238.7 44.88C237.762 44.88 236.546 45.6693 235.052 47.248C233.602 48.8267 232.62 50.6187 232.108 52.624C234.156 51.3867 235.884 50.0853 237.292 48.72C238.7 47.312 239.404 46.3307 239.404 45.776C239.404 45.1787 239.17 44.88 238.7 44.88ZM279.085 47.376C279.383 47.1627 279.661 47.056 279.917 47.056C280.173 47.056 280.301 47.2053 280.301 47.504V47.632C275.863 51.3013 272.173 54.0533 269.229 55.888C266.285 57.7227 263.618 58.64 261.229 58.64C259.309 58.64 258.349 57.7013 258.349 55.824C258.349 53.0507 259.757 50.2133 262.573 47.312C265.389 44.368 267.757 42.896 269.677 42.896C270.743 42.896 271.277 43.4933 271.277 44.688C271.063 47.0347 267.693 50.192 261.165 54.16V54.8C261.165 56.208 261.89 56.912 263.341 56.912C264.834 56.912 266.434 56.4213 268.141 55.44C271.469 53.4773 274.583 51.2373 277.485 48.72L279.085 47.376ZM268.013 44.88C267.074 44.88 265.858 45.6693 264.365 47.248C262.914 48.8267 261.933 50.6187 261.421 52.624C263.469 51.3867 265.197 50.0853 266.605 48.72C268.013 47.312 268.717 46.3307 268.717 45.776C268.717 45.1787 268.482 44.88 268.013 44.88ZM305.121 47.568C296.118 55.0773 290.55 58.832 288.417 58.832C287.179 58.832 286.561 58.32 286.561 57.296C286.561 56.272 287.009 55.056 287.905 53.648C288.843 52.24 289.761 51.0027 290.657 49.936C291.595 48.8267 292.065 48.1653 292.065 47.952C292.065 47.7387 292.001 47.632 291.873 47.632C287.905 50.2773 285.537 51.8987 284.769 52.496C284.043 53.0933 282.827 54.0747 281.121 55.44C279.457 56.8053 278.369 57.6587 277.857 58C277.345 58.3413 276.79 58.512 276.193 58.512C275.595 58.512 275.297 58.256 275.297 57.744C275.297 57.1467 276.491 55.2693 278.881 52.112C281.185 48.9547 282.337 47.184 282.337 46.8C282.337 46.7147 282.251 46.672 282.081 46.672C281.953 46.672 280.118 47.9733 276.577 50.576L276.321 49.616C279.35 47.184 281.398 45.6267 282.465 44.944C283.531 44.2613 284.385 43.92 285.025 43.92C285.707 43.92 286.049 44.24 286.049 44.88C286.049 45.3067 284.833 47.056 282.401 50.128C280.011 53.1573 278.817 54.8 278.817 55.056C278.817 55.2693 278.881 55.376 279.009 55.376C279.179 55.376 281.611 53.6693 286.305 50.256C291.041 46.8 293.921 45.072 294.945 45.072C295.243 45.072 295.521 45.2 295.777 45.456C296.075 45.6693 296.225 45.8827 296.225 46.096C296.225 46.608 295.094 48.3147 292.833 51.216C290.571 54.0747 289.441 55.696 289.441 56.08C289.441 56.464 289.697 56.656 290.209 56.656C290.763 56.656 291.915 56.08 293.665 54.928C296.865 52.8373 299.809 50.6827 302.497 48.464L303.905 47.312C304.203 47.0987 304.481 46.992 304.737 46.992C304.993 46.992 305.121 47.12 305.121 47.376V47.568ZM326.621 19.984L312.413 19.28C312.327 19.28 312.135 19.408 311.837 19.664C311.538 19.92 311.282 20.048 311.069 20.048C310.855 20.048 310.706 20.0267 310.621 19.984C308.103 19.088 306.845 18 306.845 16.72C306.845 16.08 307.207 15.76 307.933 15.76C308.359 15.76 311.111 16.1013 316.189 16.784C321.309 17.424 326.813 17.744 332.701 17.744C338.589 17.744 344.242 17.424 349.661 16.784C355.421 11.792 361.138 9.296 366.813 9.296C369.159 9.296 370.333 9.85066 370.333 10.96C370.333 13.8613 363.762 16.272 350.621 18.192C346.269 22.544 340.999 29.648 334.813 39.504C332.509 43.1307 330.226 46.6293 327.965 50C322.973 57.424 318.898 61.136 315.741 61.136C314.589 61.136 314.013 60.624 314.013 59.6C314.013 58.6187 314.439 57.4667 315.293 56.144C316.103 54.864 316.743 54.224 317.213 54.224C317.255 54.224 317.277 54.224 317.277 54.224C317.831 54.224 318.109 54.544 318.109 55.184L317.853 56.4C317.853 56.6133 317.938 56.72 318.109 56.72C320.37 56.72 324.21 52.112 329.629 42.896C331.805 39.184 334.578 34.96 337.949 30.224C341.319 25.488 344.583 21.6053 347.741 18.576C340.359 19.5147 333.319 19.984 326.621 19.984ZM365.277 10.512C361.181 10.512 356.935 12.4747 352.541 16.4C355.698 15.9307 358.407 15.3547 360.669 14.672C362.973 13.9893 364.594 13.3493 365.533 12.752C366.471 12.1547 366.941 11.6427 366.941 11.216C366.941 10.7467 366.386 10.512 365.277 10.512ZM358.778 47.376C359.077 47.1627 359.354 47.056 359.61 47.056C359.866 47.056 359.994 47.2053 359.994 47.504V47.632C355.557 51.3013 351.866 54.0533 348.922 55.888C345.978 57.7227 343.312 58.64 340.922 58.64C339.002 58.64 338.042 57.7013 338.042 55.824C338.042 53.0507 339.45 50.2133 342.266 47.312C345.082 44.368 347.45 42.896 349.37 42.896C350.437 42.896 350.97 43.4933 350.97 44.688C350.757 47.0347 347.386 50.192 340.858 54.16V54.8C340.858 56.208 341.584 56.912 343.034 56.912C344.528 56.912 346.128 56.4213 347.834 55.44C351.162 53.4773 354.277 51.2373 357.178 48.72L358.778 47.376ZM347.706 44.88C346.768 44.88 345.552 45.6693 344.058 47.248C342.608 48.8267 341.626 50.6187 341.114 52.624C343.162 51.3867 344.89 50.0853 346.298 48.72C347.706 47.312 348.41 46.3307 348.41 45.776C348.41 45.1787 348.176 44.88 347.706 44.88ZM356.986 36.88C356.986 37.6053 356.133 38.416 354.426 39.312C352.762 40.208 351.034 40.976 349.242 41.616C348.986 41.616 348.858 41.4667 348.858 41.168C348.858 40.8267 349.221 40.528 349.946 40.272C350.714 40.016 351.632 39.4827 352.698 38.672C353.808 37.8613 354.554 37.2213 354.938 36.752C355.322 36.2827 355.749 36.048 356.218 36.048C356.73 36.048 356.986 36.3253 356.986 36.88ZM384.808 47.568C375.806 55.0773 370.238 58.832 368.104 58.832C366.867 58.832 366.248 58.32 366.248 57.296C366.248 56.272 366.696 55.056 367.592 53.648C368.531 52.24 369.448 51.0027 370.344 49.936C371.283 48.8267 371.752 48.1653 371.752 47.952C371.752 47.7387 371.688 47.632 371.56 47.632C367.592 50.2773 365.224 51.8987 364.456 52.496C363.731 53.0933 362.515 54.0747 360.808 55.44C359.144 56.8053 358.056 57.6587 357.544 58C357.032 58.3413 356.478 58.512 355.88 58.512C355.283 58.512 354.984 58.256 354.984 57.744C354.984 57.1467 356.179 55.2693 358.568 52.112C360.872 48.9547 362.024 47.184 362.024 46.8C362.024 46.7147 361.939 46.672 361.768 46.672C361.64 46.672 359.806 47.9733 356.264 50.576L356.008 49.616C359.038 47.184 361.086 45.6267 362.152 44.944C363.219 44.2613 364.072 43.92 364.712 43.92C365.395 43.92 365.736 44.24 365.736 44.88C365.736 45.3067 364.52 47.056 362.088 50.128C359.699 53.1573 358.504 54.8 358.504 55.056C358.504 55.2693 358.568 55.376 358.696 55.376C358.867 55.376 361.299 53.6693 365.992 50.256C370.728 46.8 373.608 45.072 374.632 45.072C374.931 45.072 375.208 45.2 375.464 45.456C375.763 45.6693 375.912 45.8827 375.912 46.096C375.912 46.608 374.782 48.3147 372.52 51.216C370.259 54.0747 369.128 55.696 369.128 56.08C369.128 56.464 369.384 56.656 369.896 56.656C370.451 56.656 371.603 56.08 373.352 54.928C376.552 52.8373 379.496 50.6827 382.184 48.464L383.592 47.312C383.891 47.0987 384.168 46.992 384.424 46.992C384.68 46.992 384.808 47.12 384.808 47.376V47.568ZM390.104 50.32C389.848 50.32 389.72 50.2347 389.72 50.064C389.72 49.8507 389.869 49.616 390.168 49.36C391.576 48.208 392.28 47.1627 392.28 46.224C392.28 45.6267 391.746 45.2853 390.68 45.2C388.76 45.2427 386.456 46.6293 383.768 49.36C381.122 52.0907 379.8 54.1387 379.8 55.504C379.8 55.9733 380.056 56.208 380.568 56.208C381.122 56.208 381.848 55.8453 382.744 55.12C383.554 54.608 385.069 53.328 387.288 51.28C387.8 50.768 388.29 50.512 388.76 50.512C389.357 50.512 389.656 50.7893 389.656 51.344C389.656 51.5573 389.592 51.728 389.464 51.856C389.336 51.984 389.101 52.2613 388.76 52.688C388.418 53.072 388.12 53.4347 387.864 53.776C387.096 54.8853 386.712 55.6107 386.712 55.952C386.712 56.8053 387.053 57.232 387.736 57.232C388.632 57.232 390.317 56.4213 392.792 54.8C395.266 53.136 397.528 51.472 399.576 49.808L402.648 47.376C402.946 47.1627 403.224 47.056 403.48 47.056C403.736 47.056 403.864 47.2053 403.864 47.504V47.632C400.578 50.4053 397.101 53.008 393.432 55.44C389.805 57.872 387.416 59.088 386.264 59.088C384.898 59.088 384.216 58.3627 384.216 56.912C384.216 56.5707 384.28 56.2507 384.408 55.952C384.536 55.6533 384.6 55.44 384.6 55.312C384.6 55.184 384.557 55.0987 384.472 55.056C384.344 55.056 383.512 55.632 381.976 56.784C380.482 57.936 379.16 58.512 378.008 58.512C376.898 58.512 376.344 57.9147 376.344 56.72C376.344 55.5253 377.133 53.9253 378.712 51.92C380.333 49.872 382.488 48.016 385.176 46.352C387.864 44.688 390.488 43.856 393.048 43.856C393.645 43.856 394.136 44.0053 394.52 44.304C394.946 44.6027 395.16 45.072 395.16 45.712C395.16 46.3093 394.541 47.2267 393.304 48.464C392.066 49.7013 391 50.32 390.104 50.32ZM416.843 47.376C417.142 47.1627 417.419 47.056 417.675 47.056C417.931 47.056 418.059 47.2053 418.059 47.504V47.632C414.859 50.192 411.702 52.6027 408.587 54.864C405.473 57.0827 403.19 58.192 401.739 58.192C400.673 58.192 400.139 57.616 400.139 56.464C400.139 55.312 400.651 54.16 401.675 53.008C402.699 51.856 403.702 50.8533 404.683 50C405.707 49.1467 406.219 48.592 406.219 48.336C406.219 48.0373 406.049 47.7173 405.707 47.376C405.409 46.992 405.153 46.736 404.939 46.608C404.214 47.3333 402.635 48.656 400.203 50.576L399.947 49.616C402.635 47.4827 404.193 46.0533 404.619 45.328V44.752C404.619 43.6853 404.726 42.96 404.939 42.576C405.153 42.192 405.665 41.6587 406.475 40.976C407.286 40.2933 407.841 39.952 408.139 39.952C408.438 39.952 408.694 40.0587 408.907 40.272C409.163 40.4853 409.291 40.6987 409.291 40.912C409.291 41.1253 409.206 41.3813 409.035 41.68C408.907 41.936 408.758 42.1707 408.587 42.384C408.459 42.5547 408.267 42.7893 408.011 43.088C407.755 43.344 407.585 43.536 407.499 43.664C407.457 43.7493 407.393 43.92 407.307 44.176C407.265 44.432 407.137 44.6453 406.923 44.816C406.71 44.9867 406.603 45.2 406.603 45.456C406.603 45.712 406.774 46.288 407.115 47.184C407.457 48.0373 407.627 48.6773 407.627 49.104C407.627 49.488 406.838 50.448 405.259 51.984C403.681 53.4773 402.891 54.6933 402.891 55.632C402.891 56.144 403.126 56.4 403.595 56.4C404.193 56.4 405.302 55.8667 406.923 54.8L407.691 54.288C410.465 52.368 413.067 50.4267 415.499 48.464L416.843 47.376ZM433.528 47.376C433.827 47.1627 434.104 47.056 434.36 47.056C434.616 47.056 434.744 47.2053 434.744 47.504V47.632C430.307 51.3013 426.616 54.0533 423.672 55.888C420.728 57.7227 418.062 58.64 415.672 58.64C413.752 58.64 412.792 57.7013 412.792 55.824C412.792 53.0507 414.2 50.2133 417.016 47.312C419.832 44.368 422.2 42.896 424.12 42.896C425.187 42.896 425.72 43.4933 425.72 44.688C425.507 47.0347 422.136 50.192 415.608 54.16V54.8C415.608 56.208 416.334 56.912 417.784 56.912C419.278 56.912 420.878 56.4213 422.584 55.44C425.912 53.4773 429.027 51.2373 431.928 48.72L433.528 47.376ZM422.456 44.88C421.518 44.88 420.302 45.6693 418.808 47.248C417.358 48.8267 416.376 50.6187 415.864 52.624C417.912 51.3867 419.64 50.0853 421.048 48.72C422.456 47.312 423.16 46.3307 423.16 45.776C423.16 45.1787 422.926 44.88 422.456 44.88ZM419.192 36.112C419.192 35.5573 419.427 35.28 419.896 35.28C420.408 35.28 420.856 35.5147 421.24 35.984C421.624 36.4533 422.35 37.0933 423.416 37.904C424.526 38.7147 425.614 39.312 426.68 39.696C427.107 39.824 427.32 40.0587 427.32 40.4C427.32 40.6987 427.192 40.848 426.936 40.848C423.352 39.568 421.006 38.3733 419.896 37.264C419.427 36.7947 419.192 36.4107 419.192 36.112ZM417.062 83.088C418.086 83.088 419.793 81.8933 422.182 79.504C424.572 77.1147 426.854 74.2133 429.03 70.8C431.206 67.4293 432.444 64.5707 432.742 62.224C428.348 65.0827 424.529 68.304 421.286 71.888C418.001 75.5147 416.358 78.928 416.358 82.128C416.358 82.768 416.593 83.088 417.062 83.088ZM437.798 58C438.95 57.4453 439.697 57.168 440.038 57.168C440.38 57.168 440.55 57.3173 440.55 57.616C440.55 57.9147 440.294 58.1707 439.782 58.384C438.374 58.896 436.732 59.7493 434.854 60.944V61.264C434.854 63.824 433.532 67.024 430.886 70.864C428.241 74.704 425.382 77.968 422.31 80.656C419.196 83.3867 416.913 84.752 415.462 84.752C414.353 84.752 413.798 84.1333 413.798 82.896C413.798 81.104 414.417 79.1413 415.654 77.008C416.849 74.9173 418.428 72.8907 420.39 70.928C424.23 66.96 428.39 63.568 432.87 60.752C432.657 58.5333 431.228 57.3387 428.582 57.168C427.942 57.168 427.622 56.976 427.622 56.592C427.622 56.464 427.921 56.2293 428.518 55.888C429.116 55.504 430.076 54.9067 431.398 54.096C432.721 53.2853 434.364 52.048 436.326 50.384C438.289 48.6773 439.27 47.3333 439.27 46.352C439.27 45.8827 439.057 45.648 438.63 45.648C437.649 45.648 435.772 46.7573 432.998 48.976L431.014 50.576L430.758 49.616C431.27 49.232 431.846 48.784 432.486 48.272C436.326 45.1147 439.185 43.536 441.062 43.536C442.214 43.536 442.79 44.1547 442.79 45.392C442.79 47.9093 438.908 51.3227 431.142 55.632C430.801 55.8027 430.63 55.9733 430.63 56.144C430.63 56.3147 430.673 56.4 430.758 56.4C432.892 56.9547 434.193 58.0427 434.662 59.664C435.644 59.0667 436.689 58.512 437.798 58ZM465.147 47.376C465.446 47.1627 465.723 47.056 465.979 47.056C466.235 47.056 466.363 47.2053 466.363 47.504V47.632C461.926 51.3013 458.235 54.0533 455.291 55.888C452.347 57.7227 449.681 58.64 447.291 58.64C445.371 58.64 444.411 57.7013 444.411 55.824C444.411 53.0507 445.819 50.2133 448.635 47.312C451.451 44.368 453.819 42.896 455.739 42.896C456.806 42.896 457.339 43.4933 457.339 44.688C457.126 47.0347 453.755 50.192 447.227 54.16V54.8C447.227 56.208 447.953 56.912 449.403 56.912C450.897 56.912 452.497 56.4213 454.203 55.44C457.531 53.4773 460.646 51.2373 463.547 48.72L465.147 47.376ZM454.075 44.88C453.137 44.88 451.921 45.6693 450.427 47.248C448.977 48.8267 447.995 50.6187 447.483 52.624C449.531 51.3867 451.259 50.0853 452.667 48.72C454.075 47.312 454.779 46.3307 454.779 45.776C454.779 45.1787 454.545 44.88 454.075 44.88Z" fill="#000000"/>
+      </svg>
+    </a>
+
+    <button class="header__menu-toggle" data-nav-toggle aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="site-nav">
+      <span></span><span></span><span></span><span></span>
+    </button>
+  </div>
+
+  <nav class="header__nav" id="site-nav" data-nav aria-label="Navigation principale">
+    <ul class="header__nav-list">
+      <li><a href="#le-gite" class="header__nav-link" data-nav-link data-i18n="nav.le-gite">Le gîte</a></li>
+      <li><a href="#tarifs" class="header__nav-link" data-nav-link data-i18n="nav.tarifs">Tarifs</a></li>
+      <li><a href="#decouvrir" class="header__nav-link" data-nav-link data-i18n="nav.decouvrir">Découvrir</a></li>
+      <li><a href="#contact" class="header__nav-link" data-nav-link data-i18n="nav.contact">Contact</a></li>
+      <li><a href="#disponibilites" class="header__nav-link header__nav-cta" data-nav-link data-i18n="nav.book">Réserver</a></li>
+    </ul>
+  </nav>
+</header>
+
+<!-- 3D logo dock — fixed, screen-centred at rest. HeroScatter ambient-bounces it,
+     then flies it to the top-left corner (from 50% hero scroll) where it stays as
+     the site logo for the rest of the page. Grab to rotate. Decorative (aria-hidden);
+     the accessible "Samaret" heading lives in the hero <h1>. -->
+<div class="logo-dock" data-logo-dock aria-hidden="true">
+  <model-viewer
+    class="logo-dock__model"
+    src="ui-assets/samaret-3dlogo.glb"
+    poster="ui-assets/samaretlogo2.svg"
+    camera-controls
+    disable-zoom
+    disable-pan
+    disable-tap
+    interaction-prompt="none"
+    camera-orbit="0deg 85deg auto"
+    field-of-view="30deg"
+    environment-image="neutral"
+    exposure="1.1"
+    shadow-intensity="0"
+    loading="eager">
+  </model-viewer>
+</div>
+
+<div class="progress" data-progress aria-hidden="true"></div>
+<a class="book-bar" href="#disponibilites" data-book-bar>
+  <span class="book-bar__price" data-i18n="bar.price">À partir de <strong>[[prix]]</strong> / nuit</span>
+  <span class="book-bar__cta" data-i18n="bar.cta">Réserver</span>
+</a>
+<div class="lang-switch" role="group" aria-label="Langue / Language">
+  <button type="button" data-lang="fr" aria-pressed="true" lang="fr">FR</button><span aria-hidden="true">/</span><button type="button" data-lang="en" aria-pressed="false" lang="en">EN</button>
+</div>
+<div class="cursor" data-cursor aria-hidden="true"><img class="cursor__flower" src="ui-assets/sunflower-cursor.png" alt=""><span class="cursor__label" data-i18n="cursor">Glisser</span></div>
+
+<main>
+
+  <!-- ============================================= -->
+  <!-- 1. HERO -->
+  <!-- ============================================= -->
+  <section id="hero" class="hero">
+    <!-- Web encodes of video/chateau-lagardere-drone.mp4 (original kept): 720p ≈1.6 Mo for
+         phones, 1080p ≈4.9 Mo for desktop, no audio, fast-start. The poster is the exact
+         first frame, so the switch from still to motion is invisible. -->
+    <video class="hero__bg" poster="images/hero-poster-v3.jpg" autoplay muted loop playsinline preload="auto" disablepictureinpicture disableremoteplayback aria-hidden="true" data-hero-video>
+      <source src="video/hero-720.mp4" type="video/mp4" media="(max-width: 900px)">
+      <source src="video/hero-1080.mp4" type="video/mp4">
+    </video>
+    <div class="hero__overlay"></div>
+
+    <!-- 4 round placeholders clustered around the logo; HeroScatter flings them
+         off the edges on scroll. Swap each inner box for an <img> later. -->
+    <div class="hero__scatter" data-hero-scatter aria-hidden="true">
+      <div class="hero__circle" data-circle="1"><div class="placeholder-box">[[Photo 1]]</div></div>
+      <div class="hero__circle" data-circle="2"><div class="placeholder-box">[[Photo 2]]</div></div>
+      <div class="hero__circle" data-circle="3"><div class="placeholder-box">[[Photo 3]]</div></div>
+      <div class="hero__circle" data-circle="4"><div class="placeholder-box">[[Photo 4]]</div></div>
+    </div>
+
+    <div class="hero__content">
+      <h1 class="hero__title"><span class="sr-only">Samaret</span></h1>
+      <p class="hero__tagline" data-hero-tagline>[[À compléter : phrase d’accroche (type de séjour + particularité + bénéfice)]]</p>
+    </div>
+    <div class="hero__scroll-indicator" data-hero-scrollcue aria-hidden="true"></div>
+  </section>
+
+  <!-- ============================================= -->
+  <!-- 2. PRÉSENTATION — terracotta trail (scroll-drawn winding road) -->
+  <!-- ============================================= -->
+  <section id="presentation" class="trail" data-bg="bg" aria-label="Présentation">
+    <div class="trail__page" data-trail-page>
+
+      <div class="trail__section" data-trail-wp>
+        <figure class="trail__media" aria-hidden="true"><div class="trail__media-img placeholder-box" style="background-color: var(--color-accent-green-light);">[[À compléter : photo 01]]</div></figure>
+        <div class="trail__content">
+          <div class="trail__index" aria-hidden="true">01</div>
+          <h2 data-i18n="trail.1.h">Samaret</h2>
+          <p data-i18n="trail.1.p">Ici, la route goudronnée s'arrête au pied de ce gîte au milieu des <span>vignes</span> et des champs de tournesol.</p>
+        </div>
+      </div>
+
+      <div class="trail__section" data-trail-wp>
+        <figure class="trail__media" aria-hidden="true"><div class="trail__media-img placeholder-box" style="background-color: var(--color-muted);">[[À compléter : photo 02]]</div></figure>
+        <div class="trail__content">
+          <div class="trail__index" aria-hidden="true">02</div>
+          <h2 data-i18n="trail.2.h">Un séjour pensé pour vous</h2>
+          <p data-i18n="trail.2.p">Son aménagement, sa décoration et ses équipements ont été pensés pour vous offrir un séjour <span>apaisé, apaisant</span>, connecté avec la sérénité de la nature environnante et en rupture avec un quotidien parfois stressant.</p>
+        </div>
+      </div>
+
+      <div class="trail__section" data-trail-wp>
+        <figure class="trail__media" aria-hidden="true"><div class="trail__media-img placeholder-box" style="background-color: var(--color-accent-green-light);">[[À compléter : photo 03]]</div></figure>
+        <div class="trail__content">
+          <div class="trail__index" aria-hidden="true">03</div>
+          <h2 data-i18n="trail.3.h">Au cœur de la Ténarèze</h2>
+          <p data-i18n="trail.3.p">Idéalement situé au sein de la Ténarèze, les sites les plus beaux du Gers (<span>Flaran, Fourcès, Larresingle, Lavardens</span>…) sont à moins de 30 minutes.</p>
+        </div>
+      </div>
+
+      <div class="trail__section" data-trail-wp>
+        <figure class="trail__media" aria-hidden="true"><div class="trail__media-img placeholder-box" style="background-color: var(--color-muted);">[[À compléter : photo 04]]</div></figure>
+        <div class="trail__content">
+          <div class="trail__index" aria-hidden="true">04</div>
+          <h2 data-i18n="trail.4.h">Château de Lagardère</h2>
+          <p data-i18n="trail.4.p">Ici vous prendrez le temps de vous promener jusqu'au <span>château de Lagardère</span> dont la vue depuis votre gîte ne cessera de vous ravir, de flâner sur les marchés de Vic, Valence ou Condom,</p>
+        </div>
+      </div>
+
+      <div class="trail__section" data-trail-wp>
+        <figure class="trail__media" aria-hidden="true"><div class="trail__media-img placeholder-box" style="background-color: var(--color-accent-green-light);">[[À compléter : photo 05]]</div></figure>
+        <div class="trail__content">
+          <div class="trail__index" aria-hidden="true">05</div>
+          <h2 data-i18n="trail.5.h">Les saveurs du terroir</h2>
+          <p data-i18n="trail.5.p">de redécouvrir les saveurs des produits du terroir dans les restaurants de pays ou directement chez les producteurs, de parcourir les sentiers de randonnée au rythme de vos envies, d'inventer votre manière de jouir des <span>bienfaits qu'offre la Ténarèze</span>…</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================= -->
+  <!-- 3. LE GÎTE -->
+  <!-- ============================================= -->
+  <section id="le-gite" class="le-gite" data-bg="bg">
+    <!-- Intro: the gallery's main picture, first seen at 90vw x 90vh; GSAP pins &
+         scrubs it into the gallery while the rest of the section reveals behind. -->
+    <div class="le-gite__intro" data-legite-intro>
+      <div class="le-gite__intro-img">[[À compléter : photo principale de la chambre (identique à la vue 1)]]</div>
+    </div>
+
+    <div class="le-gite__container">
+      <h2 data-reveal data-i18n="h.gite">Le gîte</h2>
+
+      <!-- Swipeable gallery — one chambre, multiple views, infinite loop -->
+      <div class="room-gallery" data-swipe-gallery data-reveal>
+        <div class="room-gallery__track" data-swipe-track>
+          <div class="room-gallery__slide placeholder-box" style="background-color: var(--color-accent-green-light);">[[À compléter : photo chambre, vue 1]]</div>
+          <div class="room-gallery__slide placeholder-box" style="background-color: var(--color-muted);">[[À compléter : photo chambre, vue 2]]</div>
+          <div class="room-gallery__slide placeholder-box" style="background-color: var(--color-accent-yellow);">[[À compléter : photo chambre, vue 3]]</div>
+          <div class="room-gallery__slide placeholder-box" style="background-color: var(--color-bg);">[[À compléter : photo chambre, vue 4]]</div>
+          <div class="room-gallery__slide placeholder-box" style="background-color: var(--color-accent-green); color: var(--color-bg);">[[À compléter : photo chambre, vue 5]]</div>
+          <div class="room-gallery__slide placeholder-box" style="background-color: var(--color-primary); color: var(--color-bg);">[[À compléter : photo chambre, vue 6]]</div>
+          <!-- [[À compléter : dupliquer room-gallery__slide pour ajouter des photos]] -->
+        </div>
+        <div class="room-gallery__nav">
+          <button data-magnetic data-swipe-prev aria-label="Vue précédente">&larr;</button>
+          <button data-magnetic data-swipe-next aria-label="Vue suivante">&rarr;</button>
+        </div>
+        <div class="room-gallery__dots" data-swipe-dots></div>
+      </div>
+
+      <a href="[[À compléter : lien de réservation Clévacances]]?utm_source=gite_website&utm_medium=cta&utm_campaign=homepage&utm_content=chambre"
+         class="booking-flower booking-fab" data-magnetic
+         data-booking-cta
+         data-flower-badge
+         data-location="chambre"
+         aria-label="Réservations">
+        <svg class="booking-flower__ring" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" focusable="false">
+          <defs>
+            <path id="flowerRingPath" d="M60,10 a50,50 0 1,1 0,100 a50,50 0 1,1 0,-100"/>
+          </defs>
+          <text>
+            <textPath href="#flowerRingPath" xlink:href="#flowerRingPath" startOffset="0" textLength="314.159" lengthAdjust="spacing" data-i18n="ring">Réservations • Réservations • Réservations • </textPath>
+          </text>
+        </svg>
+        <img class="booking-flower__img" src="ui-assets/SVG Sunflower Design Jul 3 2026.png" alt="" aria-hidden="true">
+      </a>
+
+      <!-- ============ Infos + Équipements + Disponibilités ============
+           Organised the way guests scan: 1) the key facts at a glance,
+           2) equipment grouped by room, 3) availability beside what's nearby. -->
+      <div class="gite-info">
+
+        <!-- 1. Informations pratiques — at a glance -->
+        <div class="infos-pratiques" data-reveal>
+          <h3 data-i18n="h3.infos">Informations pratiques</h3>
+          <dl class="glance">
+            <div class="glance__item"><dt data-i18n="dt.in">Arrivée</dt><dd>[[À compléter : heure]]</dd></div>
+            <div class="glance__item"><dt data-i18n="dt.out">Départ</dt><dd>[[À compléter : heure]]</dd></div>
+            <div class="glance__item"><dt data-i18n="dt.cap">Capacité</dt><dd>[[À compléter : X adultes, Y enfants]]</dd></div>
+            <div class="glance__item"><dt data-i18n="dt.pets">Animaux</dt><dd>[[À compléter : acceptés / non acceptés]]</dd></div>
+          </dl>
+          <p class="glance__note" data-i18n="glance.note">Annulation : <a href="[[À compléter : lien conditions Clévacances]]">conditions Clévacances</a> · [[À compléter : conditions animaux si besoin]]</p>
+        </div>
+
+        <!-- 2. Équipements — by room. [[À compléter : vérifier chaque liste]] -->
+        <div class="equipements" data-reveal>
+          <h3 data-i18n="h3.equip">Équipements</h3>
+          <div class="equip-grid">
+            <article class="equip">
+              <svg class="equip__icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11h16v6a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3z"/><path d="M2 11h20M9 7c0-1.5 1-1.5 1-3M14 7c0-1.5 1-1.5 1-3"/></svg>
+              <h4 class="equip__title" data-i18n="eq.kitchen">Cuisine</h4>
+              <ul class="equip__items"><li data-i18n="it.Four">Four</li><li data-i18n="it.Réfrigérateur">Réfrigérateur</li><li data-i18n="it.Lave-vaisselle">Lave-vaisselle</li><li data-i18n="it.Espace repas">Espace repas</li></ul>
+            </article>
+            <article class="equip">
+              <svg class="equip__icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12h18v2a5 5 0 0 1-5 5H8a5 5 0 0 1-5-5z"/><path d="M6 12V6a2 2 0 0 1 4 0M7 19l-1 2M17 19l1 2"/></svg>
+              <h4 class="equip__title" data-i18n="eq.bath">Salle de bain</h4>
+              <ul class="equip__items"><li data-i18n="it.Baignoire">Baignoire</li><li data-i18n="it.Douche">Douche</li><li>WC</li></ul>
+            </article>
+            <article class="equip">
+              <svg class="equip__icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 18V8M21 18v-5a3 3 0 0 0-3-3h-8v6M3 16h18"/><circle cx="6.5" cy="12.5" r="1.8"/></svg>
+              <h4 class="equip__title" data-i18n="eq.beds">Chambres</h4>
+              <ul class="equip__items"><li data-i18n="it.Lit double">Lit double</li><li data-i18n="it.Lit simple">Lit simple</li><li data-i18n="it.Literie fournie">Literie fournie</li></ul>
+            </article>
+            <article class="equip">
+              <svg class="equip__icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="17" cy="7" r="3"/><path d="M7 21v-6M3 15a4 4 0 0 1 4-7 4 4 0 0 1 4 7zM14 21h7M3 21h7"/></svg>
+              <h4 class="equip__title" data-i18n="eq.out">Extérieur</h4>
+              <ul class="equip__items"><li data-i18n="it.Jardin">Jardin</li><li>Parking</li><li data-i18n="it.Table de pique-nique">Table de pique-nique</li></ul>
+            </article>
+            <article class="equip">
+              <svg class="equip__icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 9a14 14 0 0 1 19 0M5.5 12.5a9.5 9.5 0 0 1 13 0M8.8 16a5 5 0 0 1 6.4 0"/><circle cx="12" cy="19" r="1"/></svg>
+              <h4 class="equip__title" data-i18n="eq.net">Connectivité</h4>
+              <ul class="equip__items"><li data-i18n="it.WiFi">WiFi</li><li>[[À compléter : autres équipements]]</li></ul>
+            </article>
+          </div>
+        </div>
+
+        <!-- 3. Disponibilités + À proximité -->
+        <div class="le-gite__practical">
+          <!-- Disponibilités — unfolds on scroll (CalendarGrow) -->
+          <div class="calendar-section" id="disponibilites">
+            <h3 data-i18n="h3.dispo">Disponibilités</h3>
+            <div id="calendar-container" data-calendar-container aria-live="polite">
+              <!-- Filled by FakeCalendar (see script below) with mock availability, purely
+                   to preview the layout — swap for the real iCal/Clevacances feed later. -->
+            </div>
+            <!-- Tarifs — an indication under the calendar (nav #tarifs lands here) -->
+            <div class="tarifs" id="tarifs">
+              <p class="tarifs__price" data-i18n="tarifs.price">À partir de <strong>[[À compléter : prix]]</strong> / nuit</p>
+              <p class="tarifs__detail" data-i18n="tarifs.detail">Séjour minimum [[À compléter : nombre]] nuits · <a data-magnetic href="[[À compléter : lien de réservation Clévacances]]">Tarifs saisonniers sur Clévacances</a></p>
+            </div>
+          </div>
+
+          <div class="nearby" data-reveal>
+            <h3 data-i18n="h3.nearby">À proximité</h3>
+            <dl class="nearby__list">
+              <div class="nearby__row"><dt>Château de Lagardère</dt><dd>[[…]] min</dd></div>
+              <div class="nearby__row"><dt>Larressingle</dt><dd>[[…]] min</dd></div>
+              <div class="nearby__row"><dt>Fourcès</dt><dd>[[…]] min</dd></div>
+              <div class="nearby__row"><dt>Abbaye de Flaran</dt><dd>[[…]] min</dd></div>
+              <div class="nearby__row"><dt>Lavardens</dt><dd>[[…]] min</dd></div>
+              <div class="nearby__row"><dt>Condom</dt><dd>[[…]] min</dd></div>
+              <!-- [[À compléter : temps de trajet en voiture, en minutes]] -->
+            </dl>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============================================= -->
+  <!-- 5. DÉCOUVRIR (Marquee) -->
+  <!-- ============================================= -->
+  <section id="decouvrir" class="decouvrir" data-bg="muted">
+    <h2 class="decouvrir__heading" data-reveal>Découvrir la Ténarèze</h2>
+    <div class="marquee" data-marquee data-reveal>
+      <div class="marquee__content" data-marquee-content>
+        <div class="marquee__item"><span>Château de Lagardère</span></div>
+        <div class="marquee__item"><span>Flaran</span></div>
+        <div class="marquee__item"><span>Fourcès</span></div>
+        <div class="marquee__item"><span>Larressingle</span></div>
+        <div class="marquee__item"><span>Lavardens</span></div>
+        <div class="marquee__item"><span>Marché de Vic-Fezensac</span></div>
+        <div class="marquee__item"><span>Valence-sur-Baïse</span></div>
+        <div class="marquee__item"><span>Condom</span></div>
+        <!-- [[À compléter : ajouter restaurants, producteurs, randonnées, office de tourisme…]] -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================= -->
+  <!-- 6. MÉTÉO -->
+  <!-- ============================================= -->
+  <section id="meteo" class="meteo" data-bg="muted">
+    <div data-weather aria-live="polite">
+      <!-- [[À compléter : météo OpenWeather — pas encore branchée]] -->
+    </div>
+  </section>
+
+  <!-- ============================================= -->
+  <!-- 7. AVIS -->
+  <!-- ============================================= -->
+  <section id="avis" class="avis" data-bg="green-light">
+    <div class="avis__container">
+      <h2 data-reveal data-i18n="h.avis">Avis de nos clients</h2>
+      <!-- Livre d'or — reviews as an open guestbook. Each <article> is one page;
+           Guestbook (JS) shows two per spread (one on phones) and turns pages.
+           [[À compléter : jusqu’à 5 avis — ajouter un <article class="testimonial"> avant la page d’invitation]] -->
+      <div class="guestbook" data-guestbook data-reveal>
+        <div class="guestbook__spread" data-gb-spread>
+          <article class="testimonial">
+            <header class="testimonial__head"><span data-i18n="gb.head">Livre d'or</span><span class="testimonial__rating" aria-label="5 / 5">★★★★★</span></header>
+            <p class="testimonial__text">[[À compléter : avis client 1, 50 à 80 mots]]</p>
+            <p class="testimonial__author">[[À compléter : prénom, mois année]]</p>
+          </article>
+          <article class="testimonial">
+            <header class="testimonial__head"><span>Samaret</span><span class="testimonial__rating" aria-label="5 / 5">★★★★★</span></header>
+            <p class="testimonial__text">[[À compléter : avis client 2]]</p>
+            <p class="testimonial__author">[[À compléter : prénom, mois année]]</p>
+          </article>
+          <article class="testimonial">
+            <header class="testimonial__head"><span data-i18n="gb.head">Livre d'or</span><span class="testimonial__rating" aria-label="5 / 5">★★★★★</span></header>
+            <p class="testimonial__text">[[À compléter : avis client 3]]</p>
+            <p class="testimonial__author">[[À compléter : prénom, mois année]]</p>
+          </article>
+          <article class="testimonial testimonial--invite">
+            <header class="testimonial__head"><span>Samaret</span><span></span></header>
+            <p class="testimonial__invite" data-i18n="gb.invite">Vous avez séjourné à Samaret&nbsp;? La page suivante vous attend.</p>
+            <a class="testimonial__sign" href="[[À compléter : lien avis Google ou Clévacances]]" data-i18n="gb.sign">Signer le livre d'or</a>
+          </article>
+        </div>
+        <div class="guestbook__nav">
+          <button type="button" class="guestbook__btn" data-gb-prev data-magnetic aria-label="Pages précédentes">&larr;</button>
+          <span class="guestbook__count" data-gb-count aria-live="polite">1–2 / 4</span>
+          <button type="button" class="guestbook__btn" data-gb-next data-magnetic aria-label="Pages suivantes">&rarr;</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================= -->
+  <!-- 8. CARTE -->
+  <!-- ============================================= -->
+  <section id="carte" class="carte" data-bg="bg">
+    <div id="map-section" data-reveal>
+      <iframe
+        title="[[À compléter : Carte — accès à Samaret]]"
+        src="[[À compléter : lien d’intégration Google Maps]]"
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade">
+      </iframe>
+    </div>
+  </section>
+
+  <!-- ============================================= -->
+  <!-- 9. CLOSING — book direct -->
+  <!-- ============================================= -->
+  <section id="reserver" class="closing">
+    <figure class="closing__media" aria-hidden="true"><div class="placeholder-box" style="background-color: var(--color-accent-green-light);">[[À compléter : photo de Samaret au coucher du soleil]]</div></figure>
+    <h2 data-reveal data-i18n="h.cta">Réservez votre séjour</h2>
+    <p class="closing__lede" data-reveal data-i18n="cta.p">Choisissez vos dates et réservez en direct.</p>
+    <div class="closing__actions" data-reveal>
+      <a class="closing__btn closing__btn--solid" data-magnetic href="#disponibilites" data-i18n="cta.dates">Voir les disponibilités</a>
+      <a class="closing__btn" data-magnetic href="mailto:[[À compléter : adresse e-mail]]" data-i18n="cta.mail">Nous écrire</a>
+    </div>
+  </section>
+
+</main>
+
+<!-- ============================================= -->
+<!-- FOOTER -->
+<!-- ============================================= -->
+<footer id="contact" class="footer theme-dark">
+  <div class="footer__container">
+    <div class="footer__contact" data-reveal>
+      <a href="tel:[[À compléter : numéro de téléphone]]">[[À compléter : téléphone]]</a>
+      <a href="mailto:[[À compléter : adresse e-mail]]">[[À compléter : adresse e-mail]]</a>
+      <a href="[[À compléter : lien WhatsApp]]">WhatsApp</a>
+    </div>
+    <div class="footer__legal" data-reveal>
+      <a href="[[À compléter : lien mentions légales]]" data-i18n="f.legal">Mentions légales</a>
+      <a href="[[À compléter : lien politique de confidentialité]]" data-i18n="f.privacy">Politique de confidentialité</a>
+      <!-- [[À compléter : lien Instagram, facultatif]] -->
+    </div>
+    <p class="footer__copyright" data-reveal>© 2026 Samaret — Gîte dans le Gers.</p>
+  </div>
+</footer>
+
+<!-- Brief full-viewport cream flash, matching the page background, used to mask
+     the Le Gîte stage collapsing immediately on hand-off (see LeGiteSlideIn). -->
+<div class="le-gite__cover" data-legite-cover aria-hidden="true"></div>
+
+<!-- GSAP + ScrollTrigger (CDN, no build step) for the pinned Le Gîte scrub -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+<!-- Lenis smooth scroll (CDN, no build step). Driven by GSAP's ticker below. -->
+<script src="https://unpkg.com/lenis@1.3.23/dist/lenis.min.js"></script>
+
+<!-- model-viewer (Google) — renders the hero 3D logo (.glb). Module script,
+     non-blocking; the <model-viewer> element upgrades once the module defines it. -->
+<script type="module" src="https://unpkg.com/@google/model-viewer@3.5.0/dist/model-viewer.min.js"></script>
+
+<script>
+// ============================================================
+// Shared helpers — one source of truth for the two guards every module used to
+// re-derive inline (prefers-reduced-motion, and "is GSAP + ScrollTrigger here").
+// ============================================================
+const REDUCED_MOTION = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const hasGSAP = () => !!(window.gsap && window.ScrollTrigger);
+
+// ============================================================
+// Nav toggle (tile menu → dropdown, same at every breakpoint)
+// ============================================================
+const NavToggle = (() => {
+  const init = () => {
+    const toggle = document.querySelector('[data-nav-toggle]');
+    const nav = document.querySelector('[data-nav]');
+    if (!toggle || !nav) return;
+
+    toggle.addEventListener('click', () => {
+      const isOpen = nav.classList.toggle('is-open');
+      toggle.setAttribute('aria-expanded', String(isOpen));
+    });
+
+    nav.querySelectorAll('[data-nav-link]').forEach((link) => {
+      link.addEventListener('click', () => {
+        nav.classList.remove('is-open');
+        toggle.setAttribute('aria-expanded', 'false');
+      });
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!nav.classList.contains('is-open')) return;
+      if (nav.contains(e.target) || toggle.contains(e.target)) return;
+      nav.classList.remove('is-open');
+      toggle.setAttribute('aria-expanded', 'false');
+    });
+  };
+  return { init };
+})();
+
+// ============================================================
+// StickyChrome — the header nav and the booking FAB both stay hidden over the
+// hero (landing) and reveal once the hero is fully scrolled past. Identical
+// IntersectionObserver logic for both, so it lives in one shared helper.
+// ============================================================
+const toggleOnHeroExit = (el, className) => {
+  const hero = document.querySelector('#hero');
+  if (!el || !hero) return;
+  if (!('IntersectionObserver' in window)) { el.classList.add(className); return; }
+  const obs = new IntersectionObserver(([entry]) => {
+    el.classList.toggle(className, !entry.isIntersecting);
+  }, { threshold: 0 });
+  obs.observe(hero);
+};
+
+const StickyChrome = (() => {
+  const init = () => {
+    toggleOnHeroExit(document.querySelector('.header'), 'is-visible');
+    toggleOnHeroExit(document.body, 'is-past-hero');
+    toggleOnHeroExit(document.querySelector('[data-book-bar]'), 'is-visible');   // FR/EN switch turns ink once past the video
+    toggleOnHeroExit(document.querySelector('.booking-fab'), 'is-visible');
+  };
+  return { init };
+})();
+
+// ============================================================
+// FlowerBadgeSpin — scroll-linked rotation for the sunflower booking badge.
+// The "Réservations" ring orbits one way; the flower spins the other way,
+// faster, so the two motions read as independent. rAF-throttled; stays
+// static under prefers-reduced-motion.
+// ============================================================
+const FlowerBadgeSpin = (() => {
+  const RING_SPEED = 0.05;    // deg per px scrolled — text ring orbits
+  const FLOWER_SPEED = -0.11; // flower spins the opposite way, faster
+  const init = () => {
+    if (REDUCED_MOTION) return;
+    const badge = document.querySelector('[data-flower-badge]');
+    if (!badge) return;
+    const ring = badge.querySelector('.booking-flower__ring');
+    const img = badge.querySelector('.booking-flower__img');
+    if (!ring || !img) return;
+
+    const render = (y) => {
+      ring.style.transform = `rotate(${y * RING_SPEED}deg)`;
+      img.style.transform = `rotate(${y * FLOWER_SPEED}deg)`;
+    };
+
+    // Prefer Lenis: its 'scroll' event fires once per animation frame with the
+    // interpolated position, so the spin is phase-locked to the same frame as
+    // ScrollTrigger — no separate, out-of-phase native scroll + rAF loop.
+    const lenis = window.__samaretLenis;
+    if (lenis) {
+      lenis.on('scroll', () => render(lenis.scroll));
+      render(lenis.scroll);
+    } else {
+      // No Lenis (CDN missing; reduced-motion already returned above) → native
+      // scroll, still rAF-throttled to one write per frame.
+      let ticking = false;
+      window.addEventListener('scroll', () => {
+        if (!ticking) { ticking = true; requestAnimationFrame(() => { render(window.scrollY); ticking = false; }); }
+      }, { passive: true });
+      render(window.scrollY);
+    }
+  };
+  return { init };
+})();
+
+// ============================================================
+// Infinite swipeable room gallery
+// Clones first & last slide so swipe / click / dots wrap seamlessly.
+// Snapping is JS-controlled (native scroll-snap can't wrap).
+// ============================================================
+const SwipeGallery = (() => {
+  const init = () => {
+    const track = document.querySelector('[data-swipe-track]');
+    const dotsEl = document.querySelector('[data-swipe-dots]');
+    const prevBtn = document.querySelector('[data-swipe-prev]');
+    const nextBtn = document.querySelector('[data-swipe-next]');
+    if (!track || !dotsEl) return;
+
+    const realSlides = Array.from(track.children);
+    const count = realSlides.length;
+    if (count < 2) return; // nothing to loop
+
+    // Clone last → prepend, first → append, for a seamless wrap.
+    const lastClone = realSlides[count - 1].cloneNode(true);
+    const firstClone = realSlides[0].cloneNode(true);
+    lastClone.dataset.clone = 'last';
+    firstClone.dataset.clone = 'first';
+    [lastClone, firstClone].forEach((c) => c.setAttribute('aria-hidden', 'true'));
+    track.insertBefore(lastClone, realSlides[0]);
+    track.appendChild(firstClone);
+
+    const allSlides = Array.from(track.children); // [lastClone, ...real, firstClone]
+
+    // Dots (one per real slide)
+    realSlides.forEach((_, i) => {
+      const dot = document.createElement('button');
+      dot.className = 'room-gallery__dot';
+      dot.setAttribute('aria-label', `Vue ${i + 1}`);
+      dot.addEventListener('click', () => centerOn(i + 1, true));
+      dotsEl.appendChild(dot);
+    });
+    const dots = Array.from(dotsEl.children);
+
+    const targetLeft = (idx) => {
+      const s = allSlides[idx];
+      return s.offsetLeft - (track.clientWidth - s.offsetWidth) / 2;
+    };
+    const centerOn = (idx, smooth) => {
+      track.scrollTo({ left: targetLeft(idx), behavior: smooth ? 'smooth' : 'auto' });
+    };
+    const closestAllIndex = () => {
+      const center = track.scrollLeft + track.clientWidth / 2;
+      let best = 0, bestD = Infinity;
+      allSlides.forEach((s, i) => {
+        const d = Math.abs((s.offsetLeft + s.offsetWidth / 2) - center);
+        if (d < bestD) { bestD = d; best = i; }
+      });
+      return best;
+    };
+    const realFromAll = (idx) => {
+      if (idx === 0) return count - 1;          // lastClone
+      if (idx === count + 1) return 0;          // firstClone
+      return idx - 1;
+    };
+    const updateDots = () => {
+      const r = realFromAll(closestAllIndex());
+      dots.forEach((d, i) => d.classList.toggle('is-active', i === r));
+    };
+
+    let isJumping = false;
+    const settle = () => {
+      if (isJumping) { isJumping = false; return; }
+      let idx = closestAllIndex();
+      if (allSlides[idx].dataset.clone === 'first') idx = 1;        // wrap to real first
+      else if (allSlides[idx].dataset.clone === 'last') idx = count; // wrap to real last
+      const target = targetLeft(idx);
+      if (Math.abs(track.scrollLeft - target) > 2) {
+        isJumping = true;
+        track.scrollTo({ left: target, behavior: 'auto' });
+      }
+      updateDots();
+    };
+
+    // Settle detection: prefer native scrollend, else debounce.
+    let settleTimer;
+    const scheduleSettle = () => {
+      clearTimeout(settleTimer);
+      settleTimer = setTimeout(settle, 140);
+    };
+    const hasScrollEnd = 'onscrollend' in window;
+    track.addEventListener('scroll', () => {
+      updateDots();
+      if (!hasScrollEnd) scheduleSettle();
+    }, { passive: true });
+    if (hasScrollEnd) track.addEventListener('scrollend', settle);
+
+    prevBtn?.addEventListener('click', () => centerOn(closestAllIndex() - 1, true));
+    nextBtn?.addEventListener('click', () => centerOn(closestAllIndex() + 1, true));
+
+    // Pointer drag-to-scroll (mouse / trackpad click-drag); native touch swipe is left alone.
+    let dragging = false, startX = 0, startLeft = 0;
+    track.style.cursor = 'grab';
+    track.addEventListener('pointerdown', (e) => {
+      if (e.pointerType === 'touch') return;
+      dragging = true;
+      startX = e.clientX;
+      startLeft = track.scrollLeft;
+      track.style.cursor = 'grabbing';
+      track.setPointerCapture(e.pointerId);
+    });
+    track.addEventListener('pointermove', (e) => {
+      if (dragging) track.scrollLeft = startLeft - (e.clientX - startX);
+    });
+    const endDrag = () => {
+      if (!dragging) return;
+      dragging = false;
+      track.style.cursor = 'grab';
+      settle();
+    };
+    track.addEventListener('pointerup', endDrag);
+    track.addEventListener('pointercancel', endDrag);
+
+    // Start on the first real slide (after layout).
+    requestAnimationFrame(() => { centerOn(1, false); updateDots(); });
+    window.addEventListener('resize', () => centerOn(closestAllIndex(), false));
+  };
+  return { init };
+})();
+
+// ============================================================
+// FakeCalendar — mock month grid with made-up availability, purely to
+// preview the Disponibilités layout before the real iCal/Clevacances
+// feed is wired up. Availability is seeded per-day so it's stable
+// across re-renders instead of reshuffling every time.
+// ============================================================
+const FakeCalendar = (() => {
+  const L = {
+    fr: { days: ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'],
+          months: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'],
+          free: 'Disponible', full: 'Complet', today: "Aujourd'hui", prev: 'Mois précédent', next: 'Mois suivant',
+          note: 'Calendrier fictif — à remplacer par le flux iCal/Clévacances.' },
+    en: { days: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+          months: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+          free: 'Available', full: 'Booked', today: 'Today', prev: 'Previous month', next: 'Next month',
+          note: 'Mock calendar — to be replaced by the iCal/Clévacances feed.' },
+  };
+  const t = () => L[document.documentElement.lang === 'en' ? 'en' : 'fr'];
+
+  const seededRandom = (seed) => {
+    const x = Math.sin(seed) * 10000;
+    return x - Math.floor(x);
+  };
+  const isBooked = (year, month, day) => seededRandom(year * 372 + month * 31 + day) < 0.32;
+
+  const init = () => {
+    const container = document.querySelector('[data-calendar-container]');
+    if (!container) return;
+
+    const today = new Date();
+    let viewYear = today.getFullYear();
+    let viewMonth = today.getMonth();
+    let selected = null; // { year, month, day }
+
+    const render = () => {
+      const firstWeekday = (new Date(viewYear, viewMonth, 1).getDay() + 6) % 7; // Monday-first
+      const daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
+
+      const dayHeaderHtml = t().days.map((d) => `<div class="day-header">${d}</div>`).join('');
+      const leadingHtml = '<div class="day day--empty" aria-hidden="true"></div>'.repeat(firstWeekday);
+
+      let daysHtml = '';
+      for (let day = 1; day <= daysInMonth; day++) {
+        const isToday = viewYear === today.getFullYear() && viewMonth === today.getMonth() && day === today.getDate();
+        const isSelected = !!selected && selected.year === viewYear && selected.month === viewMonth && selected.day === day;
+        const booked = isBooked(viewYear, viewMonth, day);
+        const classes = ['day', booked ? 'booked' : 'available'];
+        if (isToday) classes.push('today');
+        if (isSelected) classes.push('selected');
+        const label = `${day} (${(booked ? t().full : t().free).toLowerCase()})`;
+        daysHtml += `<button type="button" class="${classes.join(' ')}" data-day="${day}" ${booked ? 'disabled' : ''} aria-label="${label}" aria-pressed="${isSelected}">${day}</button>`;
+      }
+
+      container.innerHTML = `
+        <div class="calendar-header">
+          <button type="button" class="calendar-nav" data-cal-prev aria-label="${t().prev}">&larr;</button>
+          <h4>${t().months[viewMonth]} ${viewYear}</h4>
+          <button type="button" class="calendar-nav" data-cal-next aria-label="${t().next}">&rarr;</button>
+        </div>
+        <div class="calendar-grid">${dayHeaderHtml}${leadingHtml}${daysHtml}</div>
+        <div class="calendar-legend text-small">
+          <span><i class="calendar-legend__dot calendar-legend__dot--available"></i> ${t().free}</span>
+          <span><i class="calendar-legend__dot calendar-legend__dot--booked"></i> ${t().full}</span>
+          <span><i class="calendar-legend__dot calendar-legend__dot--today"></i> ${t().today}</span>
+        </div>
+        <p class="calendar-disclaimer text-small">${t().note}</p>
+      `;
+
+      container.querySelector('[data-cal-prev]').addEventListener('click', () => {
+        viewMonth -= 1;
+        if (viewMonth < 0) { viewMonth = 11; viewYear -= 1; }
+        render();
+      });
+      container.querySelector('[data-cal-next]').addEventListener('click', () => {
+        viewMonth += 1;
+        if (viewMonth > 11) { viewMonth = 0; viewYear += 1; }
+        render();
+      });
+      container.querySelectorAll('.day.available').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const day = Number(btn.dataset.day);
+          const isSame = !!selected && selected.year === viewYear && selected.month === viewMonth && selected.day === day;
+          selected = isSame ? null : { year: viewYear, month: viewMonth, day };
+          render();
+        });
+      });
+    };
+
+    render();
+    document.addEventListener('samaret:lang', render);
+  };
+  return { init };
+})();
+
+// ============================================================
+// Marquee — duplicate items so translateX(-50%) loops seamlessly
+// ============================================================
+const Marquee = (() => {
+  const init = () => {
+    const content = document.querySelector('[data-marquee-content]');
+    if (!content) return;
+    Array.from(content.children).forEach((item) => {
+      const clone = item.cloneNode(true);
+      clone.setAttribute('aria-hidden', 'true');
+      content.appendChild(clone);
+    });
+  };
+  return { init };
+})();
+
+// ============================================================
+// Reveal — every [data-reveal] element fades/slides in on scroll,
+// staggered by its order within its section.
+// ============================================================
+// ============================================================
+// PresentationLines — the "Ici," body copy reveals one visual line at a
+// time as it scrolls into view. Words are measured, grouped into lines by
+// their offsetTop, each line wrapped in an overflow-clipped mask, then a
+// staggered GSAP tween slides each line up. Re-splits on width change (line
+// breaks move). Falls back to plain visible text without GSAP / under
+// prefers-reduced-motion / no-JS (<noscript>).
+// ============================================================
+const PresentationLines = (() => {
+  const SEL = '.presentation__body';
+  let tweens = [];
+
+  // Rebuild `el` as a stack of .reveal-line masks; return the inner spans.
+  const splitLines = (el) => {
+    const text = el.getAttribute('data-text') || el.textContent.trim();
+    el.setAttribute('data-text', text);
+
+    // 1) lay every word out inline so we can read wrap positions
+    el.textContent = '';
+    const words = text.split(/\s+/).filter(Boolean).map((w) => {
+      const s = document.createElement('span');
+      s.style.display = 'inline';
+      s.textContent = w;
+      el.appendChild(s);
+      el.appendChild(document.createTextNode(' '));
+      return s;
+    });
+
+    // 2) group consecutive words sharing an offsetTop into one visual line
+    const lines = [];
+    let top = null;
+    words.forEach((s) => {
+      const t = s.offsetTop;
+      if (top === null || Math.abs(t - top) > 1) { lines.push([]); top = t; }
+      lines[lines.length - 1].push(s.textContent);
+    });
+
+    // 3) rebuild as masked lines
+    el.textContent = '';
+    return lines.map((w) => {
+      const line = document.createElement('span');
+      line.className = 'reveal-line';
+      const inner = document.createElement('span');
+      inner.className = 'reveal-line__inner';
+      inner.textContent = w.join(' ');
+      line.appendChild(inner);
+      el.appendChild(line);
+      return inner;
+    });
+  };
+
+  const build = () => {
+    const els = Array.from(document.querySelectorAll(SEL));
+    if (!els.length) return;
+
+    if (REDUCED_MOTION || !hasGSAP()) {
+      els.forEach((el) => { el.style.opacity = '1'; });
+      return;
+    }
+
+    els.forEach((el) => {
+      const inners = splitLines(el);
+      const alreadyInView = el.getBoundingClientRect().top < window.innerHeight * 0.82;
+      el.style.opacity = '1';
+      if (alreadyInView) { gsap.set(inners, { yPercent: 0 }); return; } // no re-animate on resize/deep-link
+      gsap.set(inners, { yPercent: 110 });
+      const tween = gsap.to(inners, {
+        yPercent: 0,
+        duration: 1.15,
+        ease: 'power2.out',
+        stagger: 0.1,
+        // Hold will-change only for the life of the reveal, then release it —
+        // these lines animate once, so they shouldn't keep a compositor layer.
+        onStart: () => gsap.set(inners, { willChange: 'transform' }),
+        onComplete: () => gsap.set(inners, { willChange: 'auto' }),
+        scrollTrigger: { trigger: el, start: 'top 82%', once: true },
+      });
+      tweens.push(tween);
+    });
+  };
+
+  const teardown = () => {
+    tweens.forEach((t) => { if (t.scrollTrigger) t.scrollTrigger.kill(); t.kill(); });
+    tweens = [];
+  };
+
+  const init = () => {
+    const start = () => build();
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(start);   // split with final metrics, not the swap fallback
+    } else {
+      start();
+    }
+
+    let w = window.innerWidth, timer;
+    window.addEventListener('resize', () => {
+      if (window.innerWidth === w) return; // ignore mobile URL-bar (height-only) resizes
+      w = window.innerWidth;
+      clearTimeout(timer);
+      timer = setTimeout(() => { teardown(); build(); }, 200);
+    });
+  };
+  return { init };
+})();
+
+const Reveal = (() => {
+  const init = () => {
+    const targets = Array.from(document.querySelectorAll('[data-reveal]'));
+    if (!targets.length) return;
+
+
+    // Stagger by DOM order within each section/footer.
+    const groups = new Map();
+    targets.forEach((el) => {
+      const key = el.closest('section, footer') || document.body;
+      const arr = groups.get(key) || [];
+      arr.push(el);
+      groups.set(key, arr);
+    });
+    groups.forEach((arr) => arr.forEach((el, i) => {
+      el.style.transitionDelay = `${(i % 6) * 70}ms`;
+    }));
+
+    if (!('IntersectionObserver' in window)) {
+      targets.forEach((el) => el.classList.add('is-visible'));
+      return;
+    }
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          obs.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0, rootMargin: '0px 0px -10% 0px' });
+
+    targets.forEach((el) => obs.observe(el));
+  };
+  return { init };
+})();
+
+// ============================================================
+// Le Gîte slide-in (GSAP ScrollTrigger) — the reference-build mechanism.
+// The image stays IN-FLOW in its stage and travels via transform in
+// DOCUMENT space (no position:fixed), so it scrolls WITH the page:
+// scrub down → it glides into the first gallery slot; scrub up → it
+// glides back and refills the stage in sync with the scroll, so no
+// orphaned blank space can appear mid-flight.
+// On completion it commits ONE-WAY: hands off to the real slide, then
+// the stage closes with a short tween (reference: 0.45s) — gone for good.
+// No-ops without GSAP or under prefers-reduced-motion.
+// ============================================================
+const LeGiteSlideIn = (() => {
+  // Featured-photo → first-gallery-slide morph. The full-stage intro image
+  // travels (document-anchored transform: translate + scale from a top-left
+  // origin) into the first gallery slot as the gallery scrolls up, then hands
+  // off to the real slide. The hand-off now lands when the spent 100vh stage is
+  // ALREADY fully off the top of the screen, so removing it can be masked by a
+  // matching scroll correction in the SAME frame (pushed straight into Lenis) —
+  // seamless, no layout jump, no cream cover flash. No-ops without GSAP / under
+  // prefers-reduced-motion.
+  const init = () => {
+    const intro = document.querySelector('[data-legite-intro]');
+    const img = intro && intro.querySelector('.le-gite__intro-img');
+    const gallery = document.querySelector('[data-swipe-gallery]');
+    const track = document.querySelector('[data-swipe-track]');
+    const slot = track && track.querySelector('.room-gallery__slide:not([data-clone])');
+    if (!intro || !img || !gallery || !slot) return;
+    if (REDUCED_MOTION || !hasGSAP()) return;
+
+    slot.style.visibility = 'hidden'; // real first slide hidden while its stand-in travels
+    img.style.willChange = 'transform'; // set for the scrubbed morph; released in commit()
+
+    let committed = false;
+
+    // Per-frame lerp between the image's natural stage rect and the slot's live
+    // rect — both measured the same frame, so the deltas stay consistent while
+    // the page scrolls or the gallery settles.
+    //
+    // The RAW scroll progress is run through a decelerating ease before it drives
+    // the transform, so the photo settles GENTLY into the gallery slot instead of
+    // tracking scroll 1:1 and stopping dead at the hand-off (which read as rough).
+    // Most of the travel happens as the section scrolls in; the final approach
+    // slows into a soft landing — and because the ease front-loads the motion, the
+    // image is already sitting on the slot well before progress hits 1, so the
+    // commit swap below is invisible even on a fast scroll. The commit threshold
+    // still uses the raw (un-eased) progress, so the hand-off logic is untouched.
+    const landEase = gsap.parseEase('power2.out');
+    const apply = (raw) => {
+      const p = landEase(raw);
+      const ir = intro.getBoundingClientRect();
+      const sr = slot.getBoundingClientRect();
+      const w0 = window.innerWidth * 0.9, h0 = window.innerHeight * 0.9;
+      const x0 = ir.left + (ir.width - w0) / 2;
+      const y0 = ir.top + (ir.height - h0) / 2;
+      gsap.set(img, {
+        x: (sr.left - x0) * p,
+        y: (sr.top - y0) * p,
+        scaleX: 1 + (sr.width / w0 - 1) * p,
+        scaleY: 1 + (sr.height / h0 - 1) * p,
+      });
+    };
+
+    const cover = document.querySelector('[data-legite-cover]');
+
+    const commit = (self) => {
+      if (committed) return;
+      committed = true;
+      self.kill();
+      img.style.visibility = 'hidden';  // hand off to the real slide
+      img.style.willChange = 'auto';    // morph done — release the compositor layer
+      slot.style.visibility = '';
+
+      const H = intro.offsetHeight;
+      const offscreen = intro.getBoundingClientRect().bottom <= 1; // spent stage fully above the fold?
+      const lenis = window.__samaretLenis;
+      const cur = lenis ? lenis.scroll : window.scrollY;
+      intro.style.display = 'none';
+
+      if (offscreen) {
+        // Removed content is entirely above the viewport → correct scroll by its
+        // height in the same turn so nothing visible moves. One reflow, one paint.
+        const target = Math.max(0, cur - H);
+        if (lenis && typeof lenis.scrollTo === 'function') lenis.scrollTo(target, { immediate: true, force: true });
+        else window.scrollTo(0, target);
+      } else if (cover && window.gsap) {
+        // Safety net (shouldn't hit at these trigger points): mask the one frame.
+        gsap.fromTo(cover, { opacity: 1 }, { opacity: 0, duration: 0.25, ease: 'power1.out' });
+      }
+      // Defer the full-tree recalc off the commit frame: the scroll correction
+      // above lands this frame, ScrollTrigger re-measures on the next one, so the
+      // hand-off frame stays cheap (this refresh was the likeliest visible hitch).
+      requestAnimationFrame(() => ScrollTrigger.refresh());
+    };
+
+    ScrollTrigger.create({
+      trigger: gallery,
+      start: 'top bottom',  // begin as the gallery enters from the bottom
+      end: 'top 8%',        // land with the gallery near the top — stage now fully off-screen
+      scrub: true,
+      onUpdate: (self) => {
+        if (committed) return;
+        apply(self.progress);
+        if (self.progress >= 0.999) commit(self);
+      },
+      onLeave: (self) => commit(self), // fast scroll past the end still commits
+    });
+  };
+  return { init };
+})();
+
+// ============================================================
+// SmoothScroll (Lenis) — momentum smooth scrolling for the whole page.
+// Lenis drives the REAL window scroll (no transformed wrapper), so every
+// position:fixed element (header, FABs, cover) and every getBoundingClientRect
+// / window.scrollY effect on this page (hero parallax, flower spin, the Le Gîte
+// scrub) keeps working untouched. GSAP's ScrollTrigger is driven FROM Lenis so
+// the pinned scrub and line reveals stay perfectly in sync. Disabled under
+// prefers-reduced-motion, and degrades to native scroll if the CDN is missing.
+// ============================================================
+const SmoothScroll = (() => {
+  let lenis = null;
+  const init = () => {
+    if (REDUCED_MOTION) return;
+    if (!window.Lenis) return; // CDN unavailable → native scroll; every effect above still works
+
+    lenis = new Lenis({
+      duration: 1.15,          // time-based glide with an expo ease-out — weighted & elegant
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      smoothWheel: true,       // smooth the mouse wheel / trackpad only
+      anchors: true,           // in-page nav (#presentation, #le-gite, …) scrolls smoothly
+      allowNestedScroll: true, // horizontal room gallery scrolls natively without breaking page smoothness
+      // touch is intentionally left native (no syncTouch) — native momentum is
+      // more fluid on phones and avoids the iOS < 16 syncTouch instability.
+    });
+    window.__samaretLenis = lenis; // exposed so LeGiteSlideIn can scroll-correct on hand-off
+
+    if (hasGSAP()) {
+      lenis.on('scroll', ScrollTrigger.update);          // scrub / reveals track Lenis, not native scroll (plugin registered once at startup)
+      gsap.ticker.add((time) => lenis.raf(time * 1000)); // one rAF loop for GSAP + Lenis (seconds → ms)
+      gsap.ticker.lagSmoothing(0);
+    } else {
+      const raf = (t) => { lenis.raf(t); requestAnimationFrame(raf); };
+      requestAnimationFrame(raf);
+    }
+  };
+  return { init, get lenis() { return lenis; } };
+})();
+
+// ============================================================
+// CalendarGrow (GSAP ScrollTrigger) — the Disponibilités block starts fully
+// collapsed (0 height, no padding/margin) and is scrubbed open to its natural
+// size as you scroll it into view, then holds at height:auto so month
+// navigation reflows normally. Anchored to the details grid ABOVE it, so the
+// growth (which only pushes content below) never feeds back into its own
+// trigger geometry. No-ops without GSAP or under prefers-reduced-motion —
+// the calendar then simply shows at full size.
+// ============================================================
+const CalendarGrow = (() => {
+  // Reveal WITHOUT pin — the calendar now sits in a side-by-side flex row, so
+  // pinning it would tear it out of the flow and break the layout. It simply
+  // unfolds (clip + scale + fade) as it scrolls into view.
+  // No-ops without GSAP or under prefers-reduced-motion (calendar shows full).
+  const init = () => {
+    const section = document.querySelector('.calendar-section');
+    if (!section) return;
+    if (REDUCED_MOTION || !hasGSAP()) return;
+
+    gsap.fromTo(section,
+      { clipPath: 'inset(46% 0% 46% 0% round 8px)', scale: 0.96, autoAlpha: 0.25 },
+      {
+        clipPath: 'inset(0% 0% 0% 0% round 8px)', scale: 1, autoAlpha: 1,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: section,
+          start: 'top 85%',   // unfold as it scrolls into view (no pin — it's in a flex row now)
+          end: 'top 40%',
+          scrub: 0.5,
+          invalidateOnRefresh: true,
+        },
+      }
+    );
+  };
+  return { init };
+})();
+
+// ============================================================
+// HeroScatter (GSAP ScrollTrigger) — the identity moment. The hero PINS for
+// one screen of scroll while 4 placeholder circles fling off the edges, the
+// tagline + scroll-cue fade, and the 3D logo (a fixed, screen-centred dock)
+// bobs gently — then from 50% it flies to the top-left corner and stays there
+// as the site logo. Fully reversible. Without GSAP / under reduced motion the
+// logo simply docks top-left and the circles are hidden.
+// ============================================================
+const HeroScatter = (() => {
+  const BASE = [
+    { n: 1, x0: -190, y0: -60,  rot0: -7, s0: 0.92, axis: 'y', dir: -1 },
+    { n: 2, x0:  170, y0:  130, rot0:  5, s0: 0.85, axis: 'y', dir:  1 },
+    { n: 3, x0:  -70, y0:  190, rot0:  4, s0: 0.80, axis: 'x', dir: -1 },
+    { n: 4, x0:  210, y0: -150, rot0: -4, s0: 1.00, axis: 'x', dir:  1 },
+  ];
+  const factor = () => Math.min(1, Math.max(0.5, Math.min(window.innerWidth, window.innerHeight) / 900));
+
+  // Where the logo lands when docked: a small mark in the top-left, sized to
+  // clear the section content margin (so headings don't collide with it).
+  const dockState = (dock) => {
+    const target = Math.min(104, window.innerWidth * 0.22); // final box width
+    const left = Math.max(14, window.innerWidth * 0.02);    // left edge
+    return {
+      x: (left + target / 2) - window.innerWidth / 2,
+      y: 42 - window.innerHeight / 2,
+      scale: target / (dock.offsetWidth || 400),
+    };
+  };
+
+  const init = () => {
+    const hero = document.querySelector('#hero');
+    const scatter = document.querySelector('[data-hero-scatter]');
+    const dock = document.querySelector('[data-logo-dock]');
+    const model = dock && dock.querySelector('.logo-dock__model');
+    const tagline = document.querySelector('[data-hero-tagline]');
+    const cue = document.querySelector('[data-hero-scrollcue]');
+    if (!hero || !dock) return;
+
+    // No GSAP or reduced motion: dock the logo top-left immediately, hide circles.
+    if (!hasGSAP() || REDUCED_MOTION) {
+      if (scatter) scatter.style.display = 'none';
+      const d = dockState(dock);
+      dock.style.transformOrigin = '50% 50%';
+      dock.style.transform = `translate(calc(-50% + ${d.x}px), calc(-50% + ${d.y}px)) scale(${d.scale})`;
+      return;
+    }
+
+    const circles = BASE
+      .map((c) => ({ ...c, el: scatter && scatter.querySelector(`[data-circle="${c.n}"]`) }))
+      .filter((c) => c.el);
+
+    // Ambient bob on the model box — independent of the dock's scroll transform
+    // (it's a child, and model-viewer rotates its camera, not the element box).
+    if (model) {
+      gsap.set(model, { x: -7, y: 8 });
+      gsap.to(model, { x: 7,  duration: 3.1, ease: 'sine.inOut', repeat: -1, yoyo: true });
+      gsap.to(model, { y: -8, duration: 2.2, ease: 'sine.inOut', repeat: -1, yoyo: true });
+    }
+
+    // Resting layout (re-run on refresh so it stays responsive).
+    const layout = () => {
+      const k = factor();
+      circles.forEach((c) => gsap.set(c.el, {
+        xPercent: -50, yPercent: -50, x: c.x0 * k, y: c.y0 * k, rotation: c.rot0, scale: c.s0, autoAlpha: 1,
+      }));
+      gsap.set(dock, { xPercent: -50, yPercent: -50, x: 0, y: 0, scale: 1 });
+    };
+    layout();
+    ScrollTrigger.addEventListener('refreshInit', layout);
+
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: hero,
+        start: 'top top',
+        end: '+=100%',
+        scrub: 0.6,
+        pin: true,
+        anticipatePin: 1,
+        invalidateOnRefresh: true,
+        refreshPriority: 3,
+      },
+    });
+
+    // Background-video parallax — as you scroll down through the pinned hero the
+    // footage drifts up + eases in slightly, so it reads slower/deeper than the
+    // flying foreground. The video's top:-20% / height:140% overscan gives the
+    // room, so no edge is ever exposed during the drift.
+    const heroBg = hero.querySelector('.hero__bg');
+    if (heroBg) tl.to(heroBg, { yPercent: -13, scale: 1.06, ease: 'none', duration: 1 }, 0);
+
+    // Circles fling off along their axis, shrink + spin, fade out near the end.
+    circles.forEach((c) => {
+      tl.to(c.el, {
+        x: c.axis === 'x' ? () => c.x0 * factor() + c.dir * window.innerWidth * 0.9 : undefined,
+        y: c.axis === 'y' ? () => c.y0 * factor() + c.dir * window.innerHeight * 0.9 : undefined,
+        scale: c.s0 * 0.7,
+        rotation: c.rot0 * 2,
+        ease: 'none',
+      }, 0);
+      tl.to(c.el, { autoAlpha: 0, ease: 'none', duration: 0.25 }, 0.72);
+    });
+
+    // Tagline + scroll cue fade out early.
+    if (tagline) tl.to(tagline, { autoAlpha: 0, y: -24, ease: 'none', duration: 0.35 }, 0);
+    if (cue)     tl.to(cue,     { autoAlpha: 0, ease: 'none', duration: 0.25 }, 0);
+
+    // Logo holds centre (with its bob) for the first half, then flies to the
+    // top-left corner + shrinks over the second half, and stays docked.
+    tl.to(dock, {
+      x: () => dockState(dock).x,
+      y: () => dockState(dock).y,
+      scale: () => dockState(dock).scale,
+      ease: 'power2.inOut',
+      duration: 0.5,
+    }, 0.5);
+  };
+  return { init };
+})();
+
+// ============================================================
+// TrailPath — the Présentation "winding road". A terracotta trail is drawn
+// through the section as an SVG path; scrolling it draws the road (dash-offset
+// scrub) and reveals each waypoint dot + text block as you reach it.
+// Self-contained: scoped to its own [data-trail-page] container (NOT the
+// document) and it kills ONLY its own ScrollTriggers, so the shared GSAP/Lenis
+// engine and the pinned hero / Le Gîte scrubs are left untouched.
+// Under prefers-reduced-motion (or no GSAP) the road is drawn fully & statically
+// and all text shown — the road is part of the narrative, so it stays visible.
+// ============================================================
+const TrailPath = (() => {
+  // v3: the road is gone. Each Présentation block reveals on its own as it
+  // enters: number + rule draw, heading slides up out of a line mask, paragraph
+  // rises, then a terracotta underline sweeps under the key words. Reversible.
+  const init = () => {
+    const page = document.querySelector('[data-trail-page]');
+    if (!page) return;
+    const blocks = Array.from(page.querySelectorAll('.trail__content'));
+
+    blocks.forEach(c => {
+      const h = c.querySelector('h2');
+      if (h && !h.querySelector('.mask')) h.innerHTML = `<span class="mask"><span>${h.innerHTML}</span></span>`;
+    });
+
+    if (REDUCED_MOTION || !hasGSAP()) {
+      blocks.forEach(c => {
+        c.style.opacity = '1';
+        c.querySelectorAll('p span').forEach(sp => sp.style.setProperty('--hl', '100%'));
+      });
+      return;
+    }
+
+    blocks.forEach(c => {
+      const idx  = c.querySelector('.trail__index');
+      const head = c.querySelector('h2 .mask > span');
+      const para = c.querySelector('p');
+      const hls  = c.querySelectorAll('p span');
+      gsap.set(head, { yPercent: 105 });
+      gsap.set(para, { opacity: 0, y: 24 });
+      gsap.set(idx,  { opacity: 0, '--rule': 0 });
+      gsap.set(hls,  { '--hl': '0%' });
+      c.style.opacity = '1';
+
+      const tl = gsap.timeline({ paused: true, defaults: { ease: 'expo.out' } })
+        .to(idx,  { opacity: 1, '--rule': 1, duration: 1.1 }, 0)
+        .to(head, { yPercent: 0, duration: 1.3 }, 0.05)
+        .to(para, { opacity: 1, y: 0, duration: 1.2 }, 0.22)
+        .to(hls,  { '--hl': '100%', duration: 1, ease: 'power3.inOut', stagger: .15 }, 0.6);
+
+      const sec = c.closest('.trail__section');
+      const media = sec && sec.querySelector('.trail__media');
+      if (media) {
+        const fromRight = Array.prototype.indexOf.call(sec.parentNode.children, sec) % 2 === 0; // odd block (text left) → picture on the right
+        const img = media.querySelector('.trail__media-img');
+        gsap.fromTo(media, { xPercent: fromRight ? 100 : -100 }, {
+          xPercent: 0, ease: 'none',
+          scrollTrigger: { trigger: sec, start: 'top bottom', end: 'center 55%', scrub: 0.8, invalidateOnRefresh: true },
+        });
+        if (img) gsap.fromTo(img, { scale: 1.25, xPercent: fromRight ? -8 : 8 }, {
+          scale: 1, xPercent: 0, ease: 'none',
+          scrollTrigger: { trigger: sec, start: 'top bottom', end: 'bottom top', scrub: true },
+        });
+      }
+
+      ScrollTrigger.create({
+        trigger: c,
+        start: 'top 78%',
+        onEnter: () => tl.timeScale(1).play(),
+        onLeaveBack: () => tl.timeScale(2.2).reverse(),
+      });
+    });
+  };
+  return { init };
+})();
+
+
+// ============================================================
+// SplitHeadings — section h2s break into chars that flick up out of word
+// masks with a slight rotation, staggered, when the heading enters.
+// ============================================================
+const SplitHeadings = (() => {
+  const build = (h, animate) => {
+    if (h._splitTween) { h._splitTween.scrollTrigger && h._splitTween.scrollTrigger.kill(); h._splitTween.kill(); }
+    const text = h.textContent.trim();
+    h.setAttribute('aria-label', text);
+    h.innerHTML = text.split(/\s+/).map((w) =>
+      `<span class="split-word" aria-hidden="true">${[...w].map((c) => `<span class="split-char">${c}</span>`).join('')}</span>`
+    ).join(' ');
+    const chars = h.querySelectorAll('.split-char');
+    if (!animate) return;
+    gsap.set(chars, { yPercent: 110 });
+    h._splitTween = gsap.to(chars, {
+      yPercent: 0, duration: 1.3, ease: 'expo.out', stagger: 0.012,
+      scrollTrigger: { trigger: h, start: 'top 88%', toggleActions: 'play none none reverse' },
+    });
+  };
+  const enabled = () => !REDUCED_MOTION && hasGSAP();
+  const init = () => {
+    if (!enabled()) return;
+    document.querySelectorAll('main h2[data-reveal]').forEach((h) => build(h, true));
+  };
+  // Re-split after a language swap; replay the reveal only if it hasn't played yet.
+  const rebuild = (h) => {
+    if (!enabled()) return;
+    const played = h._splitTween && h._splitTween.progress() > 0;
+    build(h, !played);
+  };
+  return { init, rebuild };
+})();
+
+// ============================================================
+// BgShift — continuous canvas. Whichever [data-bg] section holds the middle
+// of the screen sets the page ground (and text colour on dark grounds).
+// Palette tokens only; CSS transitions do the blend. Works without GSAP-pin.
+// ============================================================
+const BgShift = (() => {
+  const MAP = {
+    bg:            ['var(--color-bg)',               'var(--color-text)'],
+    muted:         ['var(--color-muted)',            'var(--color-text)'],
+    'green-light': ['var(--color-accent-green-light)','var(--color-text)'],
+    primary:       ['var(--color-primary)',          'var(--color-bg)'],
+  };
+  const set = (key) => {
+    const [bg, fg] = MAP[key] || MAP.bg;
+    const r = document.documentElement.style;
+    r.setProperty('--page-bg', bg);
+    r.setProperty('--page-fg', fg);
+  };
+  const init = () => {
+    if (!hasGSAP()) return;
+    document.querySelectorAll('[data-bg]').forEach((sec) => {
+      ScrollTrigger.create({
+        trigger: sec, start: 'top 50%', end: 'bottom 50%',
+        onToggle: (self) => { if (self.isActive) set(sec.dataset.bg); },
+      });
+    });
+  };
+  return { init };
+})();
+
+// ============================================================
+// Marquee velocity — the strip runs on its own, then surges with scroll
+// speed and flips direction with scroll direction.
+// ============================================================
+const MarqueeVelocity = (() => {
+  const init = () => {
+    const content = document.querySelector('[data-marquee-content]');
+    if (!content || REDUCED_MOTION || !hasGSAP()) return;
+    content.classList.add('is-gsap');
+    const loop = gsap.to(content, { xPercent: -50, ease: 'none', duration: 40, repeat: -1 });
+    let dir = 1;
+    const lenis = window.__samaretLenis;
+    const onVel = (v) => {
+      if (Math.abs(v) > 0.2) dir = v > 0 ? 1 : -1;
+      const boost = Math.min(12, 1 + Math.abs(v) * 0.6);
+      gsap.to(loop, { timeScale: dir * boost, duration: 0.3, overwrite: true });
+      gsap.to(loop, { timeScale: dir, duration: 1.2, delay: 0.3, ease: 'power2.out' });
+    };
+    if (lenis) lenis.on('scroll', (l) => onVel(l.velocity));
+    else ScrollTrigger.create({ onUpdate: (self) => onVel(self.getVelocity() / 120) });
+  };
+  return { init };
+})();
+
+// ============================================================
+// Cursor + Magnetic + Progress — small engagement layer.
+// ============================================================
+const Engage = (() => {
+  const init = () => {
+    const bar = document.querySelector('[data-progress]');
+    if (bar && hasGSAP()) {
+      gsap.to(bar, { scaleX: 1, ease: 'none', scrollTrigger: { start: 0, end: 'max', scrub: 0.3 } });
+    }
+    if (REDUCED_MOTION || !hasGSAP() || !window.matchMedia('(pointer: fine)').matches) return;
+
+    const cur = document.querySelector('[data-cursor]');
+    if (cur) {
+      const toX = gsap.quickTo(cur, 'x', { duration: 0.45, ease: 'power3.out' });
+      const toY = gsap.quickTo(cur, 'y', { duration: 0.45, ease: 'power3.out' });
+      window.addEventListener('pointermove', (e) => {
+        toX(e.clientX); toY(e.clientY); cur.classList.add('is-on');
+        const t = e.target;
+        cur.classList.toggle('is-drag', !!t.closest('[data-swipe-track]'));
+        cur.classList.toggle('is-link', !t.closest('[data-swipe-track]') && !!t.closest('a, button'));
+      }, { passive: true });
+      document.documentElement.addEventListener('pointerleave', () => cur.classList.remove('is-on'));
+    }
+
+    document.querySelectorAll('[data-magnetic]').forEach((el) => {
+      const strength = 0.35;
+      el.addEventListener('pointermove', (e) => {
+        const r = el.getBoundingClientRect();
+        gsap.to(el, { '--mx': `${(e.clientX - (r.left + r.width / 2)) * strength}px`, '--my': `${(e.clientY - (r.top + r.height / 2)) * strength}px`, duration: 0.4, ease: 'power3.out' });
+      });
+      el.addEventListener('pointerleave', () => gsap.to(el, { '--mx': '0px', '--my': '0px', duration: 0.9, ease: 'elastic.out(1, 0.4)' }));
+    });
+  };
+  return { init };
+})();
+
+
+// ============================================================
+// Guestbook — the livre d'or. Two pages per spread (one on phones); arrows,
+// keyboard and swipe turn pages. The incoming pages wipe open from the spine
+// (clip-path) — a page turn without a corny 3D curl.
+// ============================================================
+const Guestbook = (() => {
+  const init = () => {
+    const root = document.querySelector('[data-guestbook]');
+    if (!root) return;
+    const pages = Array.from(root.querySelectorAll('.testimonial'));
+    const prev = root.querySelector('[data-gb-prev]');
+    const next = root.querySelector('[data-gb-next]');
+    const count = root.querySelector('[data-gb-count]');
+    const wide = window.matchMedia('(min-width: 900px)');
+    let spread = 0;
+    const per = () => (wide.matches ? 2 : 1);
+    const last = () => Math.ceil(pages.length / per()) - 1;
+
+    const show = (i, dir) => {
+      spread = Math.max(0, Math.min(last(), i));
+      const a = spread * per(), b = Math.min(pages.length, a + per());
+      const visible = [];
+      pages.forEach((p, k) => { const on = k >= a && k < b; p.hidden = !on; if (on) visible.push(p); });
+      count.textContent = per() === 2 && b - a === 2 ? `${a + 1}–${b} / ${pages.length}` : `${a + 1} / ${pages.length}`;
+      prev.disabled = spread === 0;
+      next.disabled = spread === last();
+      if (dir && hasGSAP() && !REDUCED_MOTION) {
+        gsap.fromTo(visible,
+          { clipPath: dir > 0 ? 'inset(0% 0% 0% 100%)' : 'inset(0% 100% 0% 0%)', opacity: 0.4 },
+          { clipPath: 'inset(0% 0% 0% 0%)', opacity: 1, duration: 0.9, ease: 'expo.out', stagger: dir > 0 ? 0.12 : -0.12, clearProps: 'clipPath' });
+      }
+    };
+
+    prev.addEventListener('click', () => show(spread - 1, -1));
+    next.addEventListener('click', () => show(spread + 1, 1));
+    root.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft') show(spread - 1, -1);
+      if (e.key === 'ArrowRight') show(spread + 1, 1);
+    });
+    let x0 = null;
+    root.addEventListener('pointerdown', (e) => { if (e.pointerType !== 'mouse') x0 = e.clientX; });
+    root.addEventListener('pointerup', (e) => {
+      if (x0 === null) return;
+      const dx = e.clientX - x0; x0 = null;
+      if (Math.abs(dx) > 40) show(spread + (dx < 0 ? 1 : -1), dx < 0 ? 1 : -1);
+    });
+    wide.addEventListener('change', () => show(Math.floor((spread * (wide.matches ? 1 : 2)) / per())));
+    show(0);
+  };
+  return { init };
+})();
+
+
+// ============================================================
+// I18n — FR (the markup) / EN (dictionary below). [data-i18n] elements swap
+// their HTML; the French is cached from the page itself, so editing the FR
+// copy in the markup never needs touching here. Choice is remembered per
+// browser and can be forced with ?lang=en. Fires 'samaret:lang' so modules
+// that render their own text (calendar) can redraw.
+// ============================================================
+const I18n = (() => {
+  const EN = {
+    "nav.le-gite": "The gîte",
+    "nav.tarifs": "Rates",
+    "nav.decouvrir": "Explore",
+    "nav.contact": "Contact",
+    "trail.1.h": "Samaret",
+    "trail.1.p": "Here, the paved road ends at the foot of this gîte, set among the <span>vineyards</span> and the sunflower fields.",
+    "trail.2.h": "A stay designed for you",
+    "trail.2.p": "Its layout, decoration and amenities have been designed to offer you a <span>peaceful, soothing</span> stay, in tune with the serenity of the surrounding countryside and a world away from a sometimes stressful daily life.",
+    "trail.3.h": "In the heart of the Ténarèze",
+    "trail.3.p": "Ideally located in the Ténarèze, the most beautiful sites of the Gers (<span>Flaran, Fourcès, Larresingle, Lavardens</span>…) are less than 30 minutes away.",
+    "trail.4.h": "Château de Lagardère",
+    "trail.4.p": "Here you will take the time to walk to the <span>Château de Lagardère</span>, whose view from your gîte will never cease to delight you, to wander the markets of Vic, Valence or Condom,",
+    "trail.5.h": "Flavours of the land",
+    "trail.5.p": "to rediscover the flavours of local produce in country restaurants or straight from the producers, to roam the hiking trails at your own pace, to invent your own way of enjoying <span>all the Ténarèze has to offer</span>…",
+    "h.gite": "The gîte",
+    "h.avis": "Guest reviews",
+    "h3.infos": "Practical information",
+    "h3.equip": "Amenities",
+    "h3.dispo": "Availability",
+    "h3.nearby": "Nearby",
+    "dt.in": "Check-in",
+    "dt.out": "Check-out",
+    "dt.cap": "Sleeps",
+    "dt.pets": "Pets",
+    "glance.note": "Cancellation: <a href=\"[[À compléter : lien conditions Clévacances]]\">Clévacances terms</a> · [[À compléter : conditions animaux si besoin]]",
+    "eq.kitchen": "Kitchen",
+    "eq.bath": "Bathroom",
+    "eq.beds": "Bedrooms",
+    "eq.out": "Outdoors",
+    "eq.net": "Connectivity",
+    "tarifs.price": "From <strong>[[À compléter : prix]]</strong> / night",
+    "tarifs.detail": "Minimum stay [[À compléter : nombre]] nights · <a data-magnetic href=\"[[À compléter : lien de réservation Clévacances]]\">Seasonal rates on Clévacances</a>",
+    "f.legal": "Legal notice",
+    "f.privacy": "Privacy policy",
+    "ring": "Book your stay • Book your stay • Book your stay • ",
+    "cursor": "Drag",
+    "nav.book": "Book",
+    "bar.price": "From <strong>[[prix]]</strong> / night",
+    "bar.cta": "Book",
+    "h.cta": "Book your stay",
+    "cta.p": "Pick your dates and book direct.",
+    "cta.dates": "See availability",
+    "cta.mail": "Write to us",
+    "gb.head": "Guestbook",
+    "gb.invite": "Stayed at Samaret? The next page is yours.",
+    "gb.sign": "Sign the guestbook",
+    "it.Four": "Oven",
+    "it.Réfrigérateur": "Fridge",
+    "it.Lave-vaisselle": "Dishwasher",
+    "it.Espace repas": "Dining area",
+    "it.Baignoire": "Bathtub",
+    "it.Douche": "Shower",
+    "it.Lit double": "Double bed",
+    "it.Lit simple": "Single bed",
+    "it.Literie fournie": "Bed linen provided",
+    "it.Jardin": "Garden",
+    "it.Table de pique-nique": "Picnic table",
+    "it.WiFi": "Wi-Fi"
+};
+  const ARIA = {
+    fr: { menu: 'Ouvrir le menu', book: 'Réservations', prev: 'Vue précédente', next: 'Vue suivante', gbPrev: 'Pages précédentes', gbNext: 'Pages suivantes' },
+    en: { menu: 'Open menu', book: 'Book your stay', prev: 'Previous view', next: 'Next view', gbPrev: 'Previous pages', gbNext: 'Next pages' },
+  };
+  const fr = new Map();
+
+  // Write into the element without breaking the motion wrappers around it.
+  const write = (el, html) => {
+    const masked = el.querySelector(':scope > .mask > span');
+    if (masked) { masked.innerHTML = html; }
+    else if (el.querySelector('.split-word')) { el.textContent = html; SplitHeadings.rebuild(el); }
+    else { el.innerHTML = html; }
+    // keep the wavy underline state of already-revealed Présentation copy
+    if (el.matches('.trail__content p')) {
+      const shown = getComputedStyle(el).opacity !== '0';
+      el.querySelectorAll('span').forEach((sp) => sp.style.setProperty('--hl', shown ? '100%' : '0%'));
+    }
+  };
+  const raw = (el) => {
+    const masked = el.querySelector(':scope > .mask > span');
+    if (masked) return masked.innerHTML;
+    if (el.hasAttribute('aria-label') && el.querySelector('.split-word')) return el.getAttribute('aria-label');
+    return el.innerHTML;
+  };
+
+  const apply = (lang) => {
+    document.documentElement.lang = lang;
+    document.querySelectorAll('[data-i18n]').forEach((el) => {
+      const key = el.dataset.i18n;
+      if (!fr.has(key)) fr.set(key, raw(el));
+      const html = lang === 'en' && EN[key] != null ? EN[key] : fr.get(key);
+      if (raw(el) !== html) write(el, html);
+    });
+    const a = ARIA[lang];
+    const set = (sel, v) => { const n = document.querySelector(sel); if (n) n.setAttribute('aria-label', v); };
+    set('[data-nav-toggle]', a.menu); set('[data-booking-cta]', a.book);
+    set('[data-swipe-prev]', a.prev); set('[data-swipe-next]', a.next);
+    set('[data-gb-prev]', a.gbPrev); set('[data-gb-next]', a.gbNext);
+    document.querySelectorAll('[data-lang]').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.lang === lang)));
+    try { localStorage.setItem('samaret-lang', lang); } catch (e) {}
+    document.dispatchEvent(new CustomEvent('samaret:lang', { detail: lang }));
+    if (window.ScrollTrigger) requestAnimationFrame(() => ScrollTrigger.refresh());
+  };
+
+  const initial = () => {
+    const q = new URLSearchParams(location.search).get('lang');
+    if (q === 'en' || q === 'fr') return q;
+    try { const v = localStorage.getItem('samaret-lang'); if (v === 'en' || v === 'fr') return v; } catch (e) {}
+    return 'fr';
+  };
+
+  const init = () => {
+    document.querySelectorAll('[data-i18n]').forEach((el) => fr.set(el.dataset.i18n, raw(el)));
+    document.querySelectorAll('[data-lang]').forEach((b) => b.addEventListener('click', () => apply(b.dataset.lang)));
+    const lang = initial();
+    if (lang !== 'fr') apply(lang);
+  };
+  return { init, apply };
+})();
+
+document.addEventListener('DOMContentLoaded', () => {
+  // Nudge the hero video: some webviews (e.g. an embedded/integrated browser)
+  // ignore the autoplay attribute but still allow a muted play() call. Where it
+  // already autoplays this is a harmless no-op; where autoplay is blocked the
+  // poster still frame shows instead of a blank box.
+  // Hero video — make sure it starts and keeps running:
+  //  • muted + play() nudge (some webviews ignore the autoplay attribute);
+  //  • if autoplay is refused (iOS Low Power Mode, data saver), retry on the
+  //    visitor's first touch / click / key — the poster (first frame) shows meanwhile;
+  //  • pause while the hero is off-screen (saves battery), resume on return;
+  //  • resume when the tab comes back to the foreground.
+  (() => {
+    const v = document.querySelector('[data-hero-video]');
+    if (!v) return;
+    v.muted = true; v.defaultMuted = true; v.playsInline = true;
+    let visible = true;
+    const tryPlay = () => { if (!visible || !v.paused) return; const p = v.play(); if (p && p.catch) p.catch(() => {}); };
+    tryPlay();
+    if (v.readyState < 3) v.addEventListener('canplay', tryPlay, { once: true });
+    const kick = () => { tryPlay(); if (!v.paused) ['touchstart', 'pointerdown', 'keydown'].forEach((e) => window.removeEventListener(e, kick)); };
+    ['touchstart', 'pointerdown', 'keydown'].forEach((e) => window.addEventListener(e, kick, { passive: true }));
+    document.addEventListener('visibilitychange', () => { if (!document.hidden) tryPlay(); });
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(([en]) => { visible = en.isIntersecting; if (visible) tryPlay(); else v.pause(); }, { threshold: 0 })
+        .observe(v.closest('section') || v);
+    }
+  })();
+
+  // Expose the classic-scrollbar width (viewport minus content width) so the
+  // full-bleed sections stay exactly viewport-wide beside it. Stays 0 on overlay-
+  // scrollbar platforms (macOS/iOS), where there was never a discrepancy.
+  const setScrollbarW = () => document.documentElement.style.setProperty(
+    '--scrollbar-w', (window.innerWidth - document.documentElement.clientWidth) + 'px');
+  setScrollbarW();
+  window.addEventListener('resize', setScrollbarW);
+
+  // Mobile: ignore the URL-bar hide/show (a height-only "resize") so it never
+  // refreshes the pinned/scrubbed triggers mid-scroll — the top cause of phone
+  // scroll jank. Register the plugin ONCE here; the modules no longer re-register.
+  if (hasGSAP()) {
+    gsap.registerPlugin(ScrollTrigger);
+    ScrollTrigger.config({ ignoreMobileResize: true });
+  }
+
+  // Météo isn't wired yet: hide the empty section so it doesn't leave a gap
+  // (remove this line once the OpenWeather widget is added).
+  (() => { const w = document.querySelector('[data-weather]'); if (w && !w.children.length) w.closest('section').hidden = true; })();
+
+  I18n.init();             // before any text is split/wrapped, so a saved EN choice loads directly
+  SmoothScroll.init();     // sets window.__samaretLenis first, so FlowerBadgeSpin can bind to it
+  NavToggle.init();
+  StickyChrome.init();
+  FlowerBadgeSpin.init();
+  HeroScatter.init();
+  TrailPath.init();
+  SwipeGallery.init();
+  FakeCalendar.init();
+  Marquee.init();
+  Reveal.init();
+  PresentationLines.init();
+  LeGiteSlideIn.init();
+  CalendarGrow.init();
+  Guestbook.init();
+  SplitHeadings.init();
+  MarqueeVelocity.init();
+  Engage.init();
+});
+</script>
+</body>
+</html>
